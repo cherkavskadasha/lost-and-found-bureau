@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
   title: "Інтернет-бюро знахідок",
-  description: "Курсова робота",
+  description: "Курсова робота Дарини Черкавської",
 };
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <Header />
-          <main className="min-h-screen bg-slate-50 pt-8 pb-16">
+          <main className="min-h-screen bg-slate-100 pt-8 pb-16">
             {children}
           </main>
         </AuthProvider>

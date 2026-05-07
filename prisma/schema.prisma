@@ -30,6 +30,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  password      String?
   phone         String?
   telegram      String?
   city          String?

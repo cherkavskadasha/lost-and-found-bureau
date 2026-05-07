@@ -12,6 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup, // Додали цей імпорт!
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
@@ -65,14 +66,19 @@ export default function Header() {
               </DropdownMenuTrigger>
               
               <DropdownMenuContent className="w-56 rounded-xl border-slate-100 shadow-lg mt-1" align="end">
-                <DropdownMenuLabel className="font-normal py-3">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-semibold leading-none text-slate-800">{session.user?.name}</p>
-                    <p className="text-xs leading-none text-slate-500">
-                      {session.user?.email}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
+                
+                {/* Огорнули Label у Group, щоб виправити помилку */}
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="font-normal py-3">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-semibold leading-none text-slate-800">{session.user?.name}</p>
+                      <p className="text-xs leading-none text-slate-500">
+                        {session.user?.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
+                
                 <DropdownMenuSeparator className="bg-slate-100" />
                 
                 <DropdownMenuItem 
