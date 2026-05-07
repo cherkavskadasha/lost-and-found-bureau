@@ -1,8 +1,9 @@
 import { NextAuthOptions, DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from "next-auth/providers/github"; 
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./prisma";
-import bcrypt from "bcryptjs";
 
 declare module "next-auth" {
   interface Session {
@@ -16,6 +17,16 @@ declare module "next-auth" {
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as any,
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
+    
+    GithubProvider({
+      clientId: process.env.GITHUB_ID as string,
+      clientSecret: process.env.GITHUB_SECRET as string,
+    }),
+    
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -26,15 +37,12 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Необхідно ввести email та пароль");
         }
-
         const user = await prisma.user.findUnique({
           where: { email: credentials.email }
         });
-
         if (!user || !user.email) {
           throw new Error("Користувача не знайдено");
         }
-
         return user;
       }
     })
@@ -44,7 +52,7 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: '/login',
+    signIn: '/login', 
   },
   callbacks: {
     async session({ session, token }) {

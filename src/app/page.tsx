@@ -6,7 +6,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       
-      {/* 1. ВЕРХНІЙ КОЛЬОРОВИЙ БЛОК */}
       <section className="w-full bg-gradient-to-r from-sky-400 to-indigo-400 pt-20 pb-40 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-4xl mx-auto text-center text-white animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 drop-shadow-md">
@@ -18,7 +17,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. ПЛАВАЮЧА КАРТКА */}
       <section className="w-full px-4 sm:px-6 lg:px-8 -mt-28 relative z-10 mb-20">
         <div className="bg-white rounded-2xl shadow-xl p-6 md:p-10 max-w-5xl mx-auto border border-slate-100 animate-in fade-in zoom-in-95 duration-700 delay-200">
           <h2 className="text-2xl md:text-3xl font-bold mb-8 text-slate-800 text-center">
@@ -27,7 +25,6 @@ export default function Home() {
           
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-center">
             
-            {/* Кнопки Дії */}
             <div className="flex w-full lg:w-auto gap-2">
               <Button variant="outline" className="flex-1 lg:w-32 bg-sky-50 text-sky-700 border-sky-200 hover:bg-sky-100 hover:text-sky-800 h-14 text-md">
                 <Search className="w-5 h-5 mr-2 shrink-0" />
@@ -39,14 +36,12 @@ export default function Home() {
               </Button>
             </div>
 
-            {/* Кнопки Категорій */}
             <div className="flex w-full lg:w-auto gap-2 flex-wrap sm:flex-nowrap">
               <Button variant="outline" className="flex-1 lg:w-32 h-14 text-slate-600 hover:bg-slate-100">Документи</Button>
               <Button variant="outline" className="flex-1 lg:w-32 h-14 text-slate-600 hover:bg-slate-100">Техніка</Button>
               <Button variant="outline" className="flex-1 lg:w-32 h-14 text-slate-600 hover:bg-slate-100">Інше</Button>
             </div>
 
-            {/* Кнопка Продовжити */}
             <div className="w-full lg:w-auto lg:ml-2 mt-2 lg:mt-0">
               <Button className="w-full lg:w-40 bg-indigo-500 hover:bg-indigo-600 text-white h-14 text-lg font-semibold shadow-md shadow-indigo-200 transition-all hover:scale-[1.02]">
                 Продовжити
@@ -57,7 +52,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. БЛОК "ЯК ЦЕ ПРАЦЮЄ" */}
       <section className="w-full px-4 sm:px-6 lg:px-8 py-12 mb-20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
