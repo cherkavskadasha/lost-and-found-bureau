@@ -1,96 +1,152 @@
 import Link from "next/link";
-import { Search, PlusCircle, FileText, Handshake, BellRing } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search, PlusCircle, ShieldCheck, PawPrint, Wallet, Clock, CheckCircle2, ArrowRight, AlertCircle, Eye } from "lucide-react";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50">
       
-      <section className="w-full bg-gradient-to-r from-sky-400 to-indigo-400 pt-20 pb-40 px-4 sm:px-6 lg:px-8 relative">
-        <div className="max-w-4xl mx-auto text-center text-white animate-in fade-in slide-in-from-bottom-4 duration-1000">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 drop-shadow-md">
-            Всеукраїнська система пошуку <br className="hidden sm:block" /> загублених речей
-          </h1>
-          <p className="text-lg md:text-xl opacity-95 font-medium drop-shadow-sm max-w-2xl mx-auto">
-            Ми допомагаємо людям знаходити втрачене та повертати знайдене додому. Швидко, безпечно та зручно.
-          </p>
+      <section className="relative bg-gradient-to-br from-sky-300 via-blue-200 to-sky-100 -mt-8 pt-20 pb-28 px-4">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-white/60 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-[30rem] h-[30rem] bg-sky-400/20 rounded-full blur-3xl"></div>
         </div>
-      </section>
 
-      <section className="w-full px-4 sm:px-6 lg:px-8 -mt-28 relative z-10 mb-20">
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-10 max-w-5xl mx-auto border border-slate-100 animate-in fade-in zoom-in-95 duration-700 delay-200">
-          <h2 className="text-2xl md:text-3xl font-bold mb-8 text-slate-800 text-center">
-            Що ви шукаєте або знайшли?
-          </h2>
+        <div className="container mx-auto max-w-4xl relative z-10 text-center">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-800 mb-6 tracking-tight leading-tight">
+            Всеукраїнська база пошуку <br className="hidden md:block" />
+            речей та домашніх тварин
+          </h1>
+          <p className="text-base md:text-lg text-slate-700 mb-8 max-w-2xl mx-auto font-medium">
+            Допомагаємо повертати важливе: від загублених документів і ключів до пухнастих улюбленців. 
+          </p>
           
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-center">
-            
-            <div className="flex w-full lg:w-auto gap-2">
-              <Button variant="outline" className="flex-1 lg:w-32 bg-sky-50 text-sky-700 border-sky-200 hover:bg-sky-100 hover:text-sky-800 h-14 text-md">
-                <Search className="w-5 h-5 mr-2 shrink-0" />
-                Шукаю
-              </Button>
-              <Button variant="outline" className="flex-1 lg:w-32 text-slate-600 h-14 text-md hover:bg-slate-100">
-                <PlusCircle className="w-5 h-5 mr-2 shrink-0" />
-                Знайшов
-              </Button>
-            </div>
-
-            <div className="flex w-full lg:w-auto gap-2 flex-wrap sm:flex-nowrap">
-              <Button variant="outline" className="flex-1 lg:w-32 h-14 text-slate-600 hover:bg-slate-100">Документи</Button>
-              <Button variant="outline" className="flex-1 lg:w-32 h-14 text-slate-600 hover:bg-slate-100">Техніка</Button>
-              <Button variant="outline" className="flex-1 lg:w-32 h-14 text-slate-600 hover:bg-slate-100">Інше</Button>
-            </div>
-
-            <div className="w-full lg:w-auto lg:ml-2 mt-2 lg:mt-0">
-              <Button className="w-full lg:w-40 bg-indigo-500 hover:bg-indigo-600 text-white h-14 text-lg font-semibold shadow-md shadow-indigo-200 transition-all hover:scale-[1.02]">
-                Продовжити
-              </Button>
-            </div>
-
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link href="/lost" className="bg-white hover:bg-slate-50 text-blue-600 px-8 py-3.5 rounded-full font-bold transition-all shadow-md flex items-center gap-2 hover:-translate-y-0.5">
+              <Search className="w-5 h-5" /> Знайти оголошення
+            </Link>
           </div>
         </div>
       </section>
 
-      <section className="w-full px-4 sm:px-6 lg:px-8 py-12 mb-20">
-        <div className="max-w-6xl mx-auto">
+      <section className="container mx-auto px-4 max-w-5xl -mt-16 relative z-20 mb-16">
+        <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-xl shadow-sky-900/5 border border-white p-6 md:p-10">
+          <h2 className="text-2xl font-bold text-slate-800 mb-8 text-center md:text-left">Що у вас сталося?</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Link href="/create" className="group flex flex-col items-center md:items-start bg-blue-50/70 hover:bg-blue-100 p-8 rounded-2xl border border-blue-100/50 transition-all hover:shadow-md hover:-translate-y-1">
+              <div className="w-14 h-14 bg-white rounded-2xl shadow-sm border border-blue-50 flex items-center justify-center mb-6 text-blue-600 group-hover:scale-110 transition-transform">
+                <AlertCircle className="w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-blue-700 transition-colors">Я загубив</h3>
+              <p className="text-slate-600 text-center md:text-left text-sm mb-6 leading-relaxed flex-grow">
+                Втратили улюбленця, документи, гаманець чи ключі? Розмістіть оголошення, щоб люди могли вам допомогти.
+              </p>
+              <div className="mt-auto flex items-center text-blue-600 font-bold text-sm">
+                Створити оголошення <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform" />
+              </div>
+            </Link>
+
+            <Link href="/create" className="group flex flex-col items-center md:items-start bg-emerald-50/70 hover:bg-emerald-100 p-8 rounded-2xl border border-emerald-100/50 transition-all hover:shadow-md hover:-translate-y-1">
+              <div className="w-14 h-14 bg-white rounded-2xl shadow-sm border border-emerald-50 flex items-center justify-center mb-6 text-emerald-600 group-hover:scale-110 transition-transform">
+                <Eye className="w-7 h-7" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-emerald-700 transition-colors">Я знайшов</h3>
+              <p className="text-slate-600 text-center md:text-left text-sm mb-6 leading-relaxed flex-grow">
+                Знайшли чужу річ або тварину на вулиці? Допоможіть їм повернутися додому безпечно.
+              </p>
+              <div className="mt-auto flex items-center text-emerald-600 font-bold text-sm">
+                Повідомити про знахідку <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform" />
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-slate-50 border-y border-slate-200">
+        <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Втратили або знайшли річ? Дійте зараз</h2>
-            <p className="text-lg text-slate-500">Чим швидше ви розмістите інформацію, тим вищі шанси на успіх.</p>
+            <h2 className="text-3xl font-bold text-slate-800 mb-4">Втратили або знайшли? Дійте зараз</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">Чим швидше ви розмістите інформацію, тим вищі шанси на успішне повернення. Наш сервіс працює 24/7 для вашого міста.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative">
-            <div className="hidden md:block absolute top-10 left-[15%] right-[15%] h-0.5 bg-slate-200 -z-10"></div>
+            <div className="hidden md:block absolute top-8 left-[15%] right-[15%] h-0.5 bg-slate-200"></div>
 
-            <div className="text-center space-y-5 bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-20 h-20 bg-sky-100 text-sky-500 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
-                <FileText className="w-10 h-10" />
+            <div className="relative text-center">
+              <div className="w-16 h-16 mx-auto bg-slate-50 border-4 border-white text-blue-600 rounded-full flex items-center justify-center mb-6 shadow-sm relative z-10">
+                <PlusCircle className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold text-slate-800">1. Розмістіть оголошення</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Опишіть річ, додайте фотографії та вкажіть місце на карті. Це займе менше двох хвилин.
+              <h3 className="text-xl font-bold text-slate-800 mb-3">1. Створіть оголошення</h3>
+              <p className="text-slate-500 text-sm">Опишіть річ або тварину, додайте особливі прикмети та вкажіть місто.</p>
+            </div>
+
+            <div className="relative text-center">
+              <div className="w-16 h-16 mx-auto bg-slate-50 border-4 border-white text-sky-500 rounded-full flex items-center justify-center mb-6 shadow-sm relative z-10">
+                <Search className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-3">2. Перевірте списки</h3>
+              <p className="text-slate-500 text-sm">Можливо, хтось вже знайшов вашу втрату і шукає саме вас.</p>
+            </div>
+
+            <div className="relative text-center">
+              <div className="w-16 h-16 mx-auto bg-slate-50 border-4 border-white text-emerald-500 rounded-full flex items-center justify-center mb-6 shadow-sm relative z-10">
+                <CheckCircle2 className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-3">3. Повернення</h3>
+              <p className="text-slate-500 text-sm">Зв'яжіться через безпечні контакти, дайте відповідь на контрольне запитання і заберіть своє.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-slate-100">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <h2 className="text-3xl font-bold text-slate-800 mb-12 text-center">Чому наш сервіс ефективний</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white/80 p-8 rounded-3xl shadow-sm border border-slate-200 hover:border-orange-200 hover:bg-white transition-colors">
+              <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mb-6">
+                <PawPrint className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-3">Універсальність</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Ми об'єднали пошук всього: від загублених котиків і собачок до паспортів, телефонів та ключів від авто.
               </p>
             </div>
 
-            <div className="text-center space-y-5 bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-20 h-20 bg-indigo-100 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
-                <BellRing className="w-10 h-10" />
+            <div className="bg-white/80 p-8 rounded-3xl shadow-sm border border-slate-200 hover:border-sky-200 hover:bg-white transition-colors">
+              <div className="w-12 h-12 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center mb-6">
+                <Clock className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-800">2. Розумне сповіщення</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Система автоматично аналізує збіги та надсилає сповіщення тим, хто міг бачити вашу річ.
+              <h3 className="text-xl font-bold text-slate-800 mb-3">Зручна фільтрація</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Не витрачайте час на гортання тисяч записів. Шукайте по своєму місту, району та конкретній категорії речей.
               </p>
             </div>
 
-            <div className="text-center space-y-5 bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-20 h-20 bg-purple-100 text-purple-500 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
-                <Handshake className="w-10 h-10" />
+            <div className="bg-white/80 p-8 rounded-3xl shadow-sm border border-slate-200 hover:border-blue-200 hover:bg-white transition-colors">
+              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-800">3. Повернення</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Безпечно зв'яжіться через платформу, задайте контрольне питання та поверніть втрачене.
+              <h3 className="text-xl font-bold text-slate-800 mb-3">Захист від шахраїв</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">
+                Унікальна система «контрольних запитань» гарантує, що річ повернеться до справжнього власника, а не до афериста.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-slate-50">
+        <div className="container mx-auto px-4 max-w-4xl text-center">
+          <h2 className="text-3xl font-bold text-slate-800 mb-8">Переглянути базу оголошень</h2>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link href="/lost" className="flex-1 bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-200 text-slate-700 hover:text-blue-700 py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-3 shadow-sm">
+              <Wallet className="w-5 h-5" /> Загублені речі
+            </Link>
+            <Link href="/found" className="flex-1 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 text-slate-700 hover:text-emerald-700 py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-3 shadow-sm">
+              <Search className="w-5 h-5" /> Знайдені речі
+            </Link>
           </div>
         </div>
       </section>
