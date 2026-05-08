@@ -26,6 +26,7 @@ export default async function FoundPage({
   const foundItems = await prisma.item.findMany({
     where: {
       type: "FOUND",
+      status: "ACTIVE",
       title: params.query ? { contains: params.query, mode: 'insensitive' } : undefined,
       city: params.city ? { contains: params.city, mode: 'insensitive' } : undefined,
       category: params.category ? { slug: params.category } : undefined,

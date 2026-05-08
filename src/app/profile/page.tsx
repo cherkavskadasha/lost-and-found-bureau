@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import ItemCard from "@/components/ItemCard";
 import Link from "next/link"; 
+import ProfileItemActions from "@/components/ProfileItemActions";
 
 export const dynamic = 'force-dynamic';
 
@@ -132,7 +133,12 @@ export default async function ProfilePage() {
                   include: { category: true },
                   orderBy: { createdAt: "desc" }
                 })).map(item => (
-                  <ItemCard key={item.id} item={item} />
+                  <div key={item.id} className="flex flex-col">
+                    <div className={`flex-grow transition-all duration-500 ${item.status === 'RESOLVED' ? 'opacity-60 grayscale-[30%]' : ''}`}>
+                      <ItemCard item={item} />
+                    </div>
+                    <ProfileItemActions itemId={item.id} status={item.status} />
+                  </div>
                 ))}
               </div>
             </div>
