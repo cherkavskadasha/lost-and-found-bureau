@@ -1,5 +1,6 @@
-import { MapPin, Calendar, Tag } from "lucide-react";
+import { MapPin, Calendar, Tag, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ItemCard({ item }: { item: any }) {
   const date = new Date(item.createdAt).toLocaleDateString('uk-UA', {
@@ -11,6 +12,21 @@ export default function ItemCard({ item }: { item: any }) {
   return (
     <Link href={`/item/${item.id}`} className="block h-full group">
       <div className="h-full bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col hover:-translate-y-1">
+        
+        <div className="relative w-full h-48 bg-slate-50 border-b border-slate-100 flex items-center justify-center overflow-hidden">
+          {item.imageUrl ? (
+            <Image 
+              src={item.imageUrl} 
+              alt={item.title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <ImageIcon className="w-12 h-12 text-slate-300" />
+          )}
+        </div>
+
         <div className="p-6 flex-grow flex flex-col">
           <div className="flex justify-between items-start mb-4">
             <span className={`text-xs font-bold px-3 py-1 rounded-full ${

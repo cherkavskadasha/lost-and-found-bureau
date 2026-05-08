@@ -57,6 +57,7 @@ model Item {
   location        String?
   controlQuestion String?
   controlAnswer   String?
+  imageUrl        String?
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 

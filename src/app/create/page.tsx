@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, MapPin, FileText, HelpCircle, AlertCircle, Loader2, Building2 } from "lucide-react"; 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import ImageUpload from "@/components/ImageUpload";
 
 export default function CreateItemPage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function CreateItemPage() {
     location: "",
     controlQuestion: "",
     controlAnswer: "",
+    imageUrl: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -91,6 +93,14 @@ export default function CreateItemPage() {
         <div className="p-8 space-y-6">
           <div className="space-y-4">
             
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-slate-700">Фотографія</label>
+              <ImageUpload 
+                value={formData.imageUrl} 
+                onChange={(url: string) => setFormData(prev => ({ ...prev, imageUrl: url }))} 
+              />
+            </div>
+
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-slate-700">Категорія</label>
               <select 

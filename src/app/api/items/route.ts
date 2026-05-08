@@ -3,45 +3,25 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
-export async function POST(req: Request) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
-    if (!session || !session.user?.id) {
-      return NextResponse.json({ message: "Необхідно увійти в систему" }, { status: 401 });
-    }
+    if (!session || !session.user?.id) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     const body = await req.json();
-    const { type, categorySlug, title, description, city, location, controlQuestion, controlAnswer } = body;
+    const { title, description, city, location, categorySlug, imageUrl } = body;
 
-    const category = await prisma.category.findUnique({
-      where: { slug: categorySlug }
+    const category = await prisma.category.findUnique({ where: { slug: categorySlug } });
+    if (!category) return NextResponse.json({ message: "Category not found" }, { status: 400 });
+
+    const updatedItem = await prisma.item.update({
+      where: { id: id, userId: session.user.id },
+      data: { title, description, city, location, imageUrl, categoryId: category.id }
     });
 
-    if (!category) {
-      return NextResponse.json({ message: "Категорію не знайдено" }, { status: 400 });
-    }
-
-    const newItem = await prisma.item.create({
-      data: {
-        type: type === "LOST" ? "LOST" : "FOUND",
-        title,
-        description,
-        city, 
-        location,
-        controlQuestion: type === "FOUND" ? controlQuestion : null,
-        controlAnswer: type === "FOUND" ? controlAnswer : null,
-        categoryId: category.id,
-        userId: session.user.id,
-      }
-    });
-
-    return NextResponse.json({ message: "Оголошення успішно створено", item: newItem }, { status: 201 });
-    
+    return NextResponse.json(updatedItem);
   } catch (error) {
-    console.error("Помилка створення оголошення:", error);
-    return NextResponse.json(
-      { message: "Сталася помилка на сервері" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: "Internal error" }, { status: 500 });
   }
 }
