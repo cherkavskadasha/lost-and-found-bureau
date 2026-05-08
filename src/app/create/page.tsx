@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, MapPin, FileText, HelpCircle, AlertCircle, Loader2 } from "lucide-react";
+import { Search, MapPin, FileText, HelpCircle, AlertCircle, Loader2, Building2 } from "lucide-react"; 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -16,6 +16,7 @@ export default function CreateItemPage() {
     categorySlug: "other",
     title: "",
     description: "",
+    city: "", 
     location: "",
     controlQuestion: "",
     controlAnswer: "",
@@ -89,20 +90,35 @@ export default function CreateItemPage() {
 
         <div className="p-8 space-y-6">
           <div className="space-y-4">
+            
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-slate-700">Категорія</label>
+              <select 
+                className="w-full h-12 px-4 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none bg-white transition-all"
+                value={formData.categorySlug}
+                onChange={(e) => setFormData({ ...formData, categorySlug: e.target.value })}
+              >
+                <option value="documents">Документи</option>
+                <option value="electronics">Техніка</option>
+                <option value="pets">Тварини</option>
+                <option value="clothing">Одяг та аксесуари</option>
+                <option value="other">Інше</option>
+              </select>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-slate-700">Категорія</label>
-                <select 
-                  className="w-full h-12 px-4 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none bg-white transition-all"
-                  value={formData.categorySlug}
-                  onChange={(e) => setFormData({ ...formData, categorySlug: e.target.value })}
-                >
-                  <option value="documents">Документи</option>
-                  <option value="electronics">Техніка</option>
-                  <option value="pets">Тварини</option>
-                  <option value="clothing">Одяг та аксесуари</option>
-                  <option value="other">Інше</option>
-                </select>
+                <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-slate-400" /> Місто
+                </label>
+                <input 
+                  type="text" 
+                  required
+                  placeholder="Наприклад: Житомир" 
+                  className="w-full h-12 px-4 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+                  value={formData.city}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                />
               </div>
 
               <div className="space-y-1.5">

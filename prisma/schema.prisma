@@ -53,6 +53,7 @@ model Item {
   description     String     @db.Text
   type            ItemType
   status          ItemStatus @default(ACTIVE)
+  city            String?
   location        String?
   controlQuestion String?
   controlAnswer   String?

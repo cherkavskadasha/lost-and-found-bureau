@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { type, categorySlug, title, description, location, controlQuestion, controlAnswer } = body;
+    const { type, categorySlug, title, description, city, location, controlQuestion, controlAnswer } = body;
 
     const category = await prisma.category.findUnique({
       where: { slug: categorySlug }
@@ -26,6 +26,7 @@ export async function POST(req: Request) {
         type: type === "LOST" ? "LOST" : "FOUND",
         title,
         description,
+        city, 
         location,
         controlQuestion: type === "FOUND" ? controlQuestion : null,
         controlAnswer: type === "FOUND" ? controlAnswer : null,
