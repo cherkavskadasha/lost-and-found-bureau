@@ -1,9 +1,10 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, MapPin, Calendar, Tag, User, Mail, ShieldAlert } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, Tag, User, Mail, ShieldAlert, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
 
 export default async function ItemDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -18,20 +19,17 @@ export default async function ItemDetailsPage({ params }: { params: Promise<{ id
     }
   });
 
-  if (!item) {
-    notFound();
-  }
+  if (!item) notFound();
 
   const date = new Date(item.createdAt).toLocaleDateString('uk-UA', {
     day: 'numeric', month: 'long', year: 'numeric'
   });
 
   const isLost = item.type === "LOST";
-  
   const fullLocation = [item.city, item.location].filter(Boolean).join(', ');
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl animate-in fade-in duration-500">
+    <div className="container mx-auto px-4 py-8 max-w-5xl animate-in fade-in duration-500">
       
       <Link href={isLost ? "/lost" : "/found"} className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-indigo-600 transition-colors mb-6">
         <ArrowLeft className="w-4 h-4 mr-2" />
@@ -39,23 +37,16 @@ export default async function ItemDetailsPage({ params }: { params: Promise<{ id
       </Link>
 
       <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-        
         <div className={`p-8 border-b border-slate-100 ${isLost ? 'bg-indigo-50/30' : 'bg-sky-50/30'}`}>
           <div className="flex items-center gap-3 mb-4">
-            <span className={`text-sm font-bold px-4 py-1.5 rounded-full ${
-              isLost 
-                ? 'bg-indigo-100 text-indigo-700' 
-                : 'bg-sky-100 text-sky-700'
-            }`}>
+            <span className={`text-sm font-bold px-4 py-1.5 rounded-full ${isLost ? 'bg-indigo-100 text-indigo-700' : 'bg-sky-100 text-sky-700'}`}>
               {isLost ? 'Загублено' : 'Знайдено'}
             </span>
             <span className="text-sm font-medium text-slate-500 px-3 py-1.5 bg-white rounded-full border border-slate-200 shadow-sm flex items-center gap-2">
               <Tag className="w-4 h-4 text-slate-400" /> {item.category?.name || 'Інше'}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-            {item.title}
-          </h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">{item.title}</h1>
           <div className="flex flex-wrap items-center gap-6 text-slate-600 text-sm">
             <span className="flex items-center gap-2 font-medium">
               <MapPin className="w-5 h-5 text-slate-400" /> {fullLocation}
@@ -66,13 +57,24 @@ export default async function ItemDetailsPage({ params }: { params: Promise<{ id
           </div>
         </div>
 
-        <div className="p-8 md:p-10 flex flex-col md:flex-row gap-10">
-          
+        <div className="p-8 md:p-10 flex flex-col lg:flex-row gap-10">
           <div className="flex-1 space-y-8">
+            {/* Блок з фотографією */}
+            <div className="relative w-full aspect-video md:aspect-square lg:aspect-video bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden flex items-center justify-center">
+              {item.imageUrl ? (
+                <Image src={item.imageUrl} alt={item.title} fill className="object-contain lg:object-cover" priority sizes="(max-width: 1024px) 100vw, 60vw" />
+              ) : (
+                <div className="flex flex-col items-center gap-2 text-slate-300">
+                  <ImageIcon className="w-20 h-20" />
+                  <p className="text-sm font-medium">Фото не додано</p>
+                </div>
+              )}
+            </div>
+
             <div>
               <h3 className="text-lg font-bold text-slate-800 mb-3">Детальний опис</h3>
-              <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                {item.description}
+              <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed bg-slate-50 p-6 rounded-2xl border border-slate-100 italic">
+                "{item.description}"
               </div>
             </div>
 
@@ -93,10 +95,9 @@ export default async function ItemDetailsPage({ params }: { params: Promise<{ id
             )}
           </div>
 
-          <div className="w-full md:w-80 flex-shrink-0">
+          <div className="w-full lg:w-80 flex-shrink-0">
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 sticky top-24">
               <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Контактна особа</h3>
-              
               <div className="flex items-center gap-4 mb-6">
                 <Avatar className="h-14 w-14 border-2 border-white shadow-sm">
                   <AvatarImage src={item.user?.image || ""} />
@@ -111,22 +112,13 @@ export default async function ItemDetailsPage({ params }: { params: Promise<{ id
                   </p>
                 </div>
               </div>
-
               <a href={`mailto:${item.user?.email}`}>
-                <Button className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-100 font-semibold text-base transition-all hover:scale-[1.02]">
-                  <Mail className="w-5 h-5 mr-2" />
-                  Написати на пошту
+                <Button className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white shadow-md font-semibold text-base transition-all hover:scale-[1.02]">
+                  <Mail className="w-5 h-5 mr-2" /> Написати на пошту
                 </Button>
               </a>
-              
-              {!isLost && (
-                 <p className="text-xs text-center text-slate-400 mt-4 px-2">
-                   Якщо це ваша річ, будьте готові дати відповідь на контрольне запитання при зверненні.
-                 </p>
-              )}
             </div>
           </div>
-
         </div>
       </div>
     </div>
