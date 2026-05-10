@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Search, Compass, LogIn, LogOut, User, Settings, Menu } from "lucide-react";
+import { Search, Compass, LogIn, LogOut, User, Settings, Menu, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -47,9 +47,16 @@ export default function Header() {
                 <DropdownMenuItem onClick={() => router.push("/found")} className="rounded-xl py-3 cursor-pointer text-slate-700 font-medium">
                   Знайдені речі
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/create")} className="rounded-xl py-3 cursor-pointer text-blue-600 font-bold bg-blue-50 mt-1">
+                <DropdownMenuItem onClick={() => router.push("/create")} className="rounded-xl py-3 cursor-pointer text-blue-600 font-bold bg-blue-50 mt-1 mb-1">
                   + Створити оголошення
                 </DropdownMenuItem>
+                
+                {(session?.user as any)?.role === "ADMIN" && (
+                  <DropdownMenuItem onClick={() => router.push("/admin")} className="rounded-xl py-3 cursor-pointer text-emerald-600 font-bold bg-emerald-50 mt-1 border border-emerald-100">
+                    <Shield className="mr-2 h-4 w-4" />
+                    Адмін-панель
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -138,6 +145,19 @@ export default function Header() {
                     <Settings className="mr-3 h-4 w-4" />
                     Налаштування
                   </DropdownMenuItem>
+
+                  {(session.user as any)?.role === "ADMIN" && (
+                    <>
+                      <DropdownMenuSeparator className="bg-slate-100 my-1" />
+                      <DropdownMenuItem 
+                        className="cursor-pointer text-emerald-700 focus:bg-emerald-50 focus:text-emerald-800 rounded-xl py-3 font-bold" 
+                        onClick={() => router.push("/admin")}
+                      >
+                        <Shield className="mr-3 h-4 w-4" />
+                        Адмін-панель
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   
                   <DropdownMenuSeparator className="bg-slate-100 my-1" />
                   

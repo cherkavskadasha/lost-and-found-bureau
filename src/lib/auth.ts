@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
         if (!user || !user.email) {
           throw new Error("Користувача не знайдено");
         }
-        return user;
+        return user as any;
       }
     })
   ],
@@ -55,17 +55,22 @@ export const authOptions: NextAuthOptions = {
     signIn: '/login', 
   },
   callbacks: {
-    async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
+    async session({ session }) {
+      if (session.user && session.user.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: session.user.email }
+        });
+        
+        if (dbUser) {
+          session.user.id = dbUser.id;
+          session.user.role = dbUser.role;
+        }
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role;
       }
       return token;
     }
