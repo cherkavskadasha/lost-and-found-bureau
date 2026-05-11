@@ -35,9 +35,11 @@ model User {
   telegram      String?
   city          String?
   role          Role      @default(USER)
+  
   accounts      Account[]
   sessions      Session[]
   items         Item[]
+  notifications Notification[] 
 }
 
 model Category {
@@ -75,8 +77,7 @@ model Image {
   item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
 }
 
-// тех.таблиці nextauth
-
+// тех.таблиці auth
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -110,4 +111,14 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  message   String   
+  isRead    Boolean  @default(false) 
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

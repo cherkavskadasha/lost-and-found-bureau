@@ -26,7 +26,19 @@ export async function DELETE(req: Request) {
   }
 
   const { id } = await req.json();
-  await prisma.item.delete({ where: { id } });
+
+  const item = await prisma.item.findUnique({ where: { id } });
+  if (!item) return NextResponse.json({ message: "Оголошення не знайдено" }, { status: 404 });
+
+  await prisma.$transaction([
+    prisma.item.delete({ where: { id } }),
+    prisma.notification.create({
+      data: {
+        userId: item.userId,
+        message: `Модератор видалив ваше оголошення "${item.title}". Якщо ви вважаєте, що це помилка, зверніться до підтримки.`
+      }
+    })
+  ]);
   
   return NextResponse.json({ message: "Оголошення видалено" });
 }
