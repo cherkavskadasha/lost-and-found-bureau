@@ -1,123 +1,167 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, MapPin, Calendar, Tag, User, Mail, ShieldAlert, Image as ImageIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MapPin, Calendar, Mail, AlertTriangle, ChevronLeft, ShieldCheck, Tag, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Image from "next/image";
 
-export default async function ItemDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   const item = await prisma.item.findUnique({
-    where: { id: id },
+    where: { id },
     include: {
+      user: true,
       category: true,
-      user: {
-        select: { name: true, email: true, image: true }
-      }
-    }
+    },
   });
 
   if (!item) notFound();
 
-  const date = new Date(item.createdAt).toLocaleDateString('uk-UA', {
-    day: 'numeric', month: 'long', year: 'numeric'
-  });
-
-  const isLost = item.type === "LOST";
-  const fullLocation = [item.city, item.location].filter(Boolean).join(', ');
-
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl animate-in fade-in duration-500">
-      
-      <Link href={isLost ? "/lost" : "/found"} className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-indigo-600 transition-colors mb-6">
-        <ArrowLeft className="w-4 h-4 mr-2" />
-        Повернутися до списку
-      </Link>
+    <div className="min-h-screen bg-slate-50 pb-20">
+      <div className="container mx-auto px-4 max-w-7xl py-8">
+        
+        {/* Кнопка назад */}
+        <Link href={item.type === "LOST" ? "/lost" : "/found"} className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-indigo-600 mb-6 transition-colors">
+          <ChevronLeft className="w-4 h-4 mr-1" /> 
+          Повернутися до списку
+        </Link>
 
-      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className={`p-8 border-b border-slate-100 ${isLost ? 'bg-indigo-50/30' : 'bg-sky-50/30'}`}>
-          <div className="flex items-center gap-3 mb-4">
-            <span className={`text-sm font-bold px-4 py-1.5 rounded-full ${isLost ? 'bg-indigo-100 text-indigo-700' : 'bg-sky-100 text-sky-700'}`}>
-              {isLost ? 'Загублено' : 'Знайдено'}
-            </span>
-            <span className="text-sm font-medium text-slate-500 px-3 py-1.5 bg-white rounded-full border border-slate-200 shadow-sm flex items-center gap-2">
-              <Tag className="w-4 h-4 text-slate-400" /> {item.category?.name || 'Інше'}
-            </span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">{item.title}</h1>
-          <div className="flex flex-wrap items-center gap-6 text-slate-600 text-sm">
-            <span className="flex items-center gap-2 font-medium">
-              <MapPin className="w-5 h-5 text-slate-400" /> {fullLocation}
-            </span>
-            <span className="flex items-center gap-2 font-medium">
-              <Calendar className="w-5 h-5 text-slate-400" /> Опубліковано: {date}
-            </span>
-          </div>
-        </div>
-
-        <div className="p-8 md:p-10 flex flex-col lg:flex-row gap-10">
-          <div className="flex-1 space-y-8">
-            <div className="relative w-full aspect-video md:aspect-square lg:aspect-video bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden flex items-center justify-center">
-              {item.imageUrl ? (
-                <Image src={item.imageUrl} alt={item.title} fill className="object-contain lg:object-cover" priority sizes="(max-width: 1024px) 100vw, 60vw" />
-              ) : (
-                <div className="flex flex-col items-center gap-2 text-slate-300">
-                  <ImageIcon className="w-20 h-20" />
-                  <p className="text-sm font-medium">Фото не додано</p>
+        {/* Головна сітка */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* ================= ЛІВА ЧАСТИНА: Вся інформація про річ ================= */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-8 space-y-8">
+              
+              {/* Шапка: Статус, Категорія */}
+              <div className="flex items-center gap-3">
+                <span className={`px-4 py-1.5 rounded-full text-sm font-bold border ${item.type === "LOST" ? "bg-indigo-50 text-indigo-700 border-indigo-100" : "bg-sky-50 text-sky-700 border-sky-100"}`}>
+                  {item.type === "LOST" ? "Загублено" : "Знайдено"}
+                </span>
+                <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 text-slate-600 rounded-full text-sm font-medium border border-slate-100">
+                  <Tag className="w-4 h-4 text-indigo-500"/>
+                  {item.category.name}
                 </div>
-              )}
-            </div>
-
-            <div>
-              <h3 className="text-lg font-bold text-slate-800 mb-3">Детальний опис</h3>
-              <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed bg-slate-50 p-6 rounded-2xl border border-slate-100 italic">
-                "{item.description}"
               </div>
-            </div>
 
-            {!isLost && item.controlQuestion && (
-              <div className="bg-orange-50 border border-orange-100 p-6 rounded-2xl">
-                <div className="flex items-start gap-3">
-                  <ShieldAlert className="w-6 h-6 text-orange-500 mt-0.5" />
+              {/* Блок: Зображення зліва, Текст справа */}
+              <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start pb-6 border-b border-slate-100">
+                
+                {/* Зображення */}
+                <div className="bg-slate-50 aspect-square rounded-2xl overflow-hidden border border-slate-100 flex items-center justify-center w-full md:w-2/5 flex-shrink-0">
+                  {item.imageUrl ? (
+                    <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="text-slate-400 text-sm">Фото відсутнє</div>
+                  )}
+                </div>
+
+                {/* Текст навпроти зображення */}
+                <div className="flex-1 space-y-5 pt-2">
+                  <h1 className="text-2xl md:text-3xl font-extrabold text-slate-800 leading-tight">
+                    {item.title}
+                  </h1>
+
                   <div>
-                    <h3 className="font-bold text-orange-900 text-lg">Увага, перевірка власника!</h3>
-                    <p className="text-sm text-orange-700 mt-1 mb-3">Автор вказав контрольне запитання, щоб переконатися, що річ належить саме вам.</p>
-                    <div className="bg-white p-4 rounded-xl border border-orange-200">
-                      <p className="text-xs font-bold text-orange-400 uppercase tracking-wider mb-1">Запитання:</p>
-                      <p className="font-medium text-slate-800">{item.controlQuestion}</p>
+                    <h2 className="text-sm font-bold text-slate-800 mb-1.5 md:mb-2 uppercase tracking-wide">Детальний опис</h2>
+                    <p className="text-slate-600 leading-relaxed whitespace-pre-wrap text-sm md:text-base">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-3 border-t border-slate-100">
+                    <div className="flex items-center gap-3 text-slate-600">
+                      <div className="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center flex-shrink-0 border border-slate-100">
+                        <MapPin className="w-4.5 h-4.5 text-indigo-500" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-400 uppercase">Місце</p>
+                        <p className="font-semibold text-slate-800 text-sm">{item.location || item.city || "Не вказано"}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 text-slate-600">
+                      <div className="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center flex-shrink-0 border border-slate-100">
+                        <Calendar className="w-4.5 h-4.5 text-indigo-500" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-400 uppercase">Опубліковано</p>
+                        <p className="font-semibold text-slate-800 text-sm">{new Date(item.createdAt).toLocaleDateString("uk-UA", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
-          </div>
 
-          <div className="w-full lg:w-80 flex-shrink-0">
-            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 sticky top-24">
-              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Контактна особа</h3>
-              <div className="flex items-center gap-4 mb-6">
-                <Avatar className="h-14 w-14 border-2 border-white shadow-sm">
-                  <AvatarImage src={item.user?.image || ""} />
-                  <AvatarFallback className="bg-indigo-100 text-indigo-700 font-bold text-lg">
-                    {item.user?.name?.[0]?.toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-bold text-slate-800 text-lg">{item.user?.name || "Анонім"}</p>
-                  <p className="text-sm text-slate-500 flex items-center gap-1.5 mt-0.5">
-                    <User className="w-4 h-4" /> Користувач системи
+              {/* Контрольне запитання */}
+              {item.controlQuestion && (
+                <div className="bg-amber-50 rounded-2xl p-6 border border-amber-200 mt-6 md:mt-8">
+                  <div className="flex items-center gap-3 mb-3">
+                    <AlertTriangle className="w-5 h-5 text-amber-600" />
+                    <h2 className="text-md font-bold text-amber-900">Перевірка власника</h2>
+                  </div>
+                  <p className="text-amber-800 text-sm mb-4">
+                    Автор вказав контрольне запитання, щоб переконатися, що річ належить саме вам.
                   </p>
+                  <div className="bg-white rounded-xl p-4 border border-amber-100">
+                    <span className="text-xs font-bold text-amber-500 uppercase tracking-wider block mb-1">Запитання:</span>
+                    <span className="text-slate-800 font-medium">{item.controlQuestion}</span>
+                  </div>
                 </div>
-              </div>
-              <a href={`mailto:${item.user?.email}`}>
-                <Button className="w-full h-12 bg-indigo-600 hover:bg-indigo-700 text-white shadow-md font-semibold text-base transition-all hover:scale-[1.02]">
-                  <Mail className="w-5 h-5 mr-2" /> Написати на пошту
-                </Button>
-              </a>
+              )}
+
             </div>
           </div>
+
+          {/* ================= ПРАВА ЧАСТИНА: Плаваюча картка контакту ================= */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
+              
+              <h3 className="text-sm font-bold text-slate-800 mb-6">Контактна особа</h3>
+              
+              <Link href={`/user/${item.userId}`}>
+                <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 cursor-pointer mb-6 group hover:border-indigo-100 hover:bg-white transition-colors">
+                  <Avatar className="w-14 h-14 border-2 border-white shadow-sm">
+                    <AvatarImage src={item.user?.image || undefined} className="object-cover" />
+                    <AvatarFallback className="bg-indigo-100 text-indigo-700 font-bold text-lg">
+                      {item.user?.name?.[0]?.toUpperCase() || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors line-clamp-1">
+                      {item.user?.name || "Користувач системи"}
+                    </p>
+                    
+                    {/* Динамічна верифікація */}
+                    {item.user?.phone ? (
+                      <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Верифікований
+                      </p>
+                    ) : (
+                      <p className="text-xs text-slate-400 flex items-center gap-1 mt-1">
+                        <User className="w-3.5 h-3.5" /> Стандартний профіль
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </Link>
+
+              <a href={`mailto:${item.user?.email}`}>
+                <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 rounded-xl font-bold transition-all shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 hover:scale-[1.02]">
+                  <Mail className="w-4 h-4" /> Написати автору
+                </button>
+              </a>
+
+              <div className="mt-6 pt-5 border-t border-slate-100 text-center">
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Будьте обережні при зустрічі та не переказуйте гроші заздалегідь. Перевіряйте річ на місці.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
