@@ -134,8 +134,7 @@ export default function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger className="relative h-11 w-11 rounded-full focus:outline-none ring-2 ring-transparent focus-visible:ring-blue-500 transition-all hover:ring-blue-200 ml-2">
                   <Avatar className="h-11 w-11 border-2 border-white shadow-md">
-                    <AvatarImage src={session.user?.image || ""} alt={session.user?.name || "User"} />
-                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-sky-100 text-blue-700 font-bold">{session.user?.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
+                    <AvatarImage src={session.user?.image || undefined} alt={session.user?.name || "User"} />                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-sky-100 text-blue-700 font-bold">{session.user?.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 

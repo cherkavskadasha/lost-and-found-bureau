@@ -16,7 +16,6 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
 
   return (
     <div>
-      {/* Показуємо завантажене фото, якщо воно є */}
       {value && (
         <div className="mb-4 flex items-center gap-4">
           <div className="relative w-[200px] h-[200px] rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
@@ -40,7 +39,6 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
         </div>
       )}
 
-      {/* Віджет Cloudinary тепер залишається змонтованим завжди, щоб коректно розблокувати скрол */}
       <CldUploadWidget 
         onSuccess={onUpload} 
         uploadPreset="bureau_items"
@@ -51,7 +49,6 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
         }}
       >
         {({ open }) => {
-          // Якщо фото вже є - просто не малюємо кнопку (ховаємо її)
           if (value) return null;
 
           return (

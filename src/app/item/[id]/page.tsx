@@ -59,7 +59,6 @@ export default async function ItemDetailsPage({ params }: { params: Promise<{ id
 
         <div className="p-8 md:p-10 flex flex-col lg:flex-row gap-10">
           <div className="flex-1 space-y-8">
-            {/* Блок з фотографією */}
             <div className="relative w-full aspect-video md:aspect-square lg:aspect-video bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden flex items-center justify-center">
               {item.imageUrl ? (
                 <Image src={item.imageUrl} alt={item.title} fill className="object-contain lg:object-cover" priority sizes="(max-width: 1024px) 100vw, 60vw" />

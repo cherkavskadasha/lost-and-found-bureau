@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { User, Phone, Send, MapPin, Loader2, Save, ArrowLeft } from "lucide-react";
+import { User, Phone, Send, MapPin, Loader2, Save, ArrowLeft, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { CldUploadWidget } from "next-cloudinary";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function EditProfilePage() {
   const router = useRouter();
@@ -18,6 +20,7 @@ export default function EditProfilePage() {
     phone: "",
     telegram: "",
     city: "",
+    image: "", 
   });
 
   useEffect(() => {
@@ -27,6 +30,7 @@ export default function EditProfilePage() {
         phone: (session.user as any).phone || "",
         telegram: (session.user as any).telegram || "",
         city: (session.user as any).city || "",
+        image: session.user.image || "", 
       });
     }
   }, [session]);
@@ -47,7 +51,11 @@ export default function EditProfilePage() {
 
       await update({
         ...session,
-        user: { ...session?.user, name: formData.name }
+        user: { 
+          ...session?.user, 
+          name: formData.name,
+          image: formData.image 
+        }
       });
 
       router.push("/profile");
@@ -70,6 +78,42 @@ export default function EditProfilePage() {
         <p className="text-slate-500 mb-8 text-sm">Ці дані допоможуть людям швидше зв'язатися з вами.</p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          
+          <div className="flex flex-col items-center gap-4 mb-8 pb-8 border-b border-slate-50">
+            <Avatar className="h-28 w-28 border-4 border-slate-50 shadow-md">
+              <AvatarImage src={formData.image || undefined} alt="Avatar" className="object-cover" />              <AvatarFallback className="text-3xl bg-indigo-50 text-indigo-600 font-bold">
+                {formData.name?.[0]?.toUpperCase() || "U"}
+              </AvatarFallback>
+            </Avatar>
+
+            <CldUploadWidget 
+              uploadPreset="bureau_items" 
+              options={{
+                maxFiles: 1,
+                resourceType: "image",
+                clientAllowedFormats: ["jpg", "jpeg", "png", "webp"],
+              }}
+              onSuccess={(result: any) => {
+                const url = result?.info?.secure_url;
+                if (url) {
+                  setFormData({ ...formData, image: url });
+                }
+              }}
+            >
+              {({ open }) => (
+                <Button 
+                  type="button" 
+                  onClick={() => open()} 
+                  variant="outline" 
+                  className="rounded-full gap-2 text-sm text-slate-600 hover:text-indigo-600 border-slate-200"
+                >
+                  <Camera className="w-4 h-4" /> 
+                  {formData.image ? "Змінити фото" : "Завантажити фото"}
+                </Button>
+              )}
+            </CldUploadWidget>
+          </div>
+
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
               <User className="w-4 h-4 text-indigo-500" /> Ваше ім'я

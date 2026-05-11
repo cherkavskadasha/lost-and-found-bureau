@@ -6,26 +6,31 @@ import prisma from "@/lib/prisma";
 export async function PATCH(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ message: "Не авторизовано" }, { status: 401 });
+    
+    if (!session?.user) {
+      return NextResponse.json({ message: "Неавторизовано" }, { status: 401 });
     }
 
     const body = await req.json();
-    const { name, phone, telegram, city } = body;
+    const { name, phone, telegram, city, image } = body; 
 
     const updatedUser = await prisma.user.update({
-      where: { id: session.user.id },
-      data: {
-        name,
-        phone,
-        telegram,
-        city,
-      },
+      where: { id: (session.user as any).id },
+      data: { 
+        name, 
+        phone, 
+        telegram, 
+        city, 
+        image 
+      }, 
     });
 
-    return NextResponse.json({ message: "Профіль оновлено", user: updatedUser });
+    return NextResponse.json(updatedUser);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Помилка при оновленні профілю" }, { status: 500 });
+    console.error("Помилка оновлення профілю:", error);
+    return NextResponse.json(
+      { message: "Помилка сервера при оновленні профілю" },
+      { status: 500 }
+    );
   }
 }

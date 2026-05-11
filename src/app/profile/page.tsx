@@ -32,20 +32,20 @@ export default async function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-12">
-      
-      {/* Шапка профілю */}
       <div className="h-32 bg-gradient-to-r from-sky-400 to-indigo-500"></div>
 
       <div className="container mx-auto px-4 max-w-7xl -mt-16 animate-in fade-in duration-500">
-        
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 mb-8">
-          
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-8">
             <div className="flex items-end gap-6">
               <div className="w-32 h-32 bg-white rounded-full p-2 shadow-sm border border-slate-100 flex-shrink-0">
-                <div className="w-full h-full bg-indigo-50 rounded-full flex items-center justify-center text-4xl font-bold text-indigo-600">
-                  {user.name?.[0]?.toUpperCase() || "U"}
-                </div>
+                {user.image ? (
+                  <img src={user.image} alt={user.name || "User"} className="w-full h-full rounded-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-indigo-50 rounded-full flex items-center justify-center text-4xl font-bold text-indigo-600">
+                    {user.name?.[0]?.toUpperCase() || "U"}
+                  </div>
+                )}
               </div>
               <div className="pb-2">
                 <h1 className="text-3xl font-extrabold text-slate-800">{user.name}</h1>
@@ -70,8 +70,6 @@ export default async function ProfilePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Статус */}
             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:border-indigo-100 transition-colors">
               <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                 <Shield className="w-4 h-4 text-indigo-500" /> Статус акаунта
@@ -92,7 +90,6 @@ export default async function ProfilePage() {
               </div>
             </div>
 
-            {/* Активність */}
             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:border-sky-100 transition-colors">
               <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                 <FileText className="w-4 h-4 text-sky-500" /> Ваша активність
@@ -113,7 +110,6 @@ export default async function ProfilePage() {
               </div>
             </div>
 
-            {/* Контакти */}
             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:border-emerald-100 transition-colors">
               <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                 <UserIcon className="w-4 h-4 text-emerald-500" /> Ваші контакти
