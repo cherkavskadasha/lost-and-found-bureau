@@ -22,16 +22,31 @@ export default function EditProfilePage() {
     city: "",
     image: "", 
   });
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch("/api/user/profile"); 
+        if (res.ok) {
+          const userData = await res.json();
+          setFormData({
+            name: userData.name || "",
+            phone: userData.phone || "",
+            telegram: userData.telegram || "",
+            city: userData.city || "",
+            image: userData.image || "",
+          });
+        }
+      } catch (err) {
+        console.error("Помилка завантаження даних профілю:", err);
+      } finally {
+        setIsDataLoaded(true);
+      }
+    };
+
     if (session?.user) {
-      setFormData({
-        name: session.user.name || "",
-        phone: (session.user as any).phone || "",
-        telegram: (session.user as any).telegram || "",
-        city: (session.user as any).city || "",
-        image: session.user.image || "", 
-      });
+       fetchUserData();
     }
   }, [session]);
 
@@ -67,6 +82,14 @@ export default function EditProfilePage() {
     }
   };
 
+  if (!isDataLoaded) {
+      return (
+          <div className="min-h-screen flex items-center justify-center">
+              <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+          </div>
+      )
+  }
+
   return (
     <div className="container mx-auto px-4 py-10 max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
       <Link href="/profile" className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-indigo-600 mb-6 transition-colors">
@@ -81,7 +104,7 @@ export default function EditProfilePage() {
           
           <div className="flex flex-col items-center gap-4 mb-8 pb-8 border-b border-slate-50">
             <Avatar className="h-28 w-28 border-4 border-slate-50 shadow-md">
-              <AvatarImage src={formData.image || undefined} alt="Avatar" className="object-cover" />              <AvatarFallback className="text-3xl bg-indigo-50 text-indigo-600 font-bold">
+              <AvatarImage src={formData.image || undefined} alt="Avatar" className="object-cover" />               <AvatarFallback className="text-3xl bg-indigo-50 text-indigo-600 font-bold">
                 {formData.name?.[0]?.toUpperCase() || "U"}
               </AvatarFallback>
             </Avatar>

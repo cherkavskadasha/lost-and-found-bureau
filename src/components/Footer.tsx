@@ -5,8 +5,9 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-br from-sky-200 via-blue-200 to-sky-200 pt-16 pb-8 border-t border-blue-300">
+    <footer className="bg-gradient-to-r from-sky-100 to-blue-200 pt-16 pb-8 border-t border-blue-300">
       <div className="container mx-auto px-4 max-w-7xl">
+        
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           
           <div className="md:col-span-1">
@@ -23,7 +24,7 @@ export default function Footer() {
             </p>
           </div>
 
-          <div>
+          <div className="md:col-span-1">
             <h3 className="text-slate-800 font-bold mb-6 tracking-wide">Швидкі посилання</h3>
             <ul className="space-y-4">
               <li>
@@ -49,32 +50,13 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-slate-800 font-bold mb-6 tracking-wide">Інформація</h3>
-            <ul className="space-y-4">
-              <li>
-                <Link href="#" className="text-slate-700 hover:text-blue-800 text-sm transition-colors flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Як це працює
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-slate-700 hover:text-blue-800 text-sm transition-colors flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Правила безпеки
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-slate-700 hover:text-blue-800 text-sm transition-colors flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Політика конфіденційності
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <div className="hidden md:block md:col-span-1"></div>
 
-          <div>
+          <div className="md:col-span-1">
             <h3 className="text-slate-800 font-bold mb-6 tracking-wide">Зв'язок з нами</h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-blue-600 shrink-0" />
+                <MapPin className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                 <span className="text-slate-700 text-sm leading-relaxed">
                   Україна<br />вул. Чуднівська, 103
                 </span>
@@ -96,9 +78,9 @@ export default function Footer() {
 
         </div>
 
-        <div className="pt-8 border-t border-blue-300 flex justify-center md:justify-start">
+        <div className="pt-8 border-t border-blue-300/50 flex justify-center md:justify-start">
           <p className="text-slate-600 text-sm">
-            &copy; {currentYear} Бюро Знахідок. Усі права захищено.
+            &copy; {currentYear} Бюро Знахідок. Житомирська політехніка.
           </p>
         </div>
       </div>

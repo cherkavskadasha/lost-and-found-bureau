@@ -41,7 +41,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 <Package className="w-4 h-4 text-indigo-500" /> {activeItems.length} оголошень
               </span>
 
-              {/* Динамічна верифікація: показуємо тільки за наявності телефону */}
               {user.phone ? (
                 <span className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100">
                   <ShieldCheck className="w-4 h-4" /> Верифікований учасник

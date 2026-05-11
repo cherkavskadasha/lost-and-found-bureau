@@ -21,20 +21,16 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
     <div className="min-h-screen bg-slate-50 pb-20">
       <div className="container mx-auto px-4 max-w-7xl py-8">
         
-        {/* Кнопка назад */}
         <Link href={item.type === "LOST" ? "/lost" : "/found"} className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-indigo-600 mb-6 transition-colors">
           <ChevronLeft className="w-4 h-4 mr-1" /> 
           Повернутися до списку
         </Link>
 
-        {/* Головна сітка */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* ================= ЛІВА ЧАСТИНА: Вся інформація про річ ================= */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-8 space-y-8">
               
-              {/* Шапка: Статус, Категорія */}
               <div className="flex items-center gap-3">
                 <span className={`px-4 py-1.5 rounded-full text-sm font-bold border ${item.type === "LOST" ? "bg-indigo-50 text-indigo-700 border-indigo-100" : "bg-sky-50 text-sky-700 border-sky-100"}`}>
                   {item.type === "LOST" ? "Загублено" : "Знайдено"}
@@ -45,10 +41,8 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                 </div>
               </div>
 
-              {/* Блок: Зображення зліва, Текст справа */}
               <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start pb-6 border-b border-slate-100">
                 
-                {/* Зображення */}
                 <div className="bg-slate-50 aspect-square rounded-2xl overflow-hidden border border-slate-100 flex items-center justify-center w-full md:w-2/5 flex-shrink-0">
                   {item.imageUrl ? (
                     <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
@@ -57,7 +51,6 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                   )}
                 </div>
 
-                {/* Текст навпроти зображення */}
                 <div className="flex-1 space-y-5 pt-2">
                   <h1 className="text-2xl md:text-3xl font-extrabold text-slate-800 leading-tight">
                     {item.title}
@@ -94,7 +87,6 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                 </div>
               </div>
 
-              {/* Контрольне запитання */}
               {item.controlQuestion && (
                 <div className="bg-amber-50 rounded-2xl p-6 border border-amber-200 mt-6 md:mt-8">
                   <div className="flex items-center gap-3 mb-3">
@@ -114,7 +106,6 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
             </div>
           </div>
 
-          {/* ================= ПРАВА ЧАСТИНА: Плаваюча картка контакту ================= */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
               
@@ -133,7 +124,6 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                       {item.user?.name || "Користувач системи"}
                     </p>
                     
-                    {/* Динамічна верифікація */}
                     {item.user?.phone ? (
                       <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
                         <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Верифікований
