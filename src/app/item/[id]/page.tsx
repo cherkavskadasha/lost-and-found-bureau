@@ -5,6 +5,7 @@ import { MapPin, Calendar, Mail, AlertTriangle, ChevronLeft, ShieldCheck, Tag, U
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ClientMap from "@/components/ClientMap";
 import ClaimForm from "@/components/ClaimForm";
+import CopyContactButton from "@/components/CopyContactButton"; 
 
 export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -136,13 +137,9 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                 </div>
               </Link>
 
-              {!item.controlQuestion && (
-                <a href={`mailto:${item.user?.email}`}>
-                  <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 rounded-xl font-bold transition-all shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 hover:scale-[1.02]">
-                    <Mail className="w-4 h-4" /> Написати автору
-                  </button>
-                </a>
-              )}
+                {!item.controlQuestion && item.user?.email && (
+                  <CopyContactButton email={item.user.email} />
+                )}
 
               <div className={`pt-5 text-center ${!item.controlQuestion ? "mt-6 border-t border-slate-100" : ""}`}>
                 <p className="text-xs text-slate-400 leading-relaxed">

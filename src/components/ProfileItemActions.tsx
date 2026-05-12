@@ -13,8 +13,10 @@ export default function ProfileItemActions({ itemId, status }: { itemId: string,
     if (!confirm("Ви впевнені, що хочете назавжди видалити це оголошення?")) return;
     setLoading(true);
     try {
-      await fetch(`/api/items/${itemId}`, { method: "DELETE" });
-      router.refresh(); // Оновлюємо сторінку, щоб картка зникла
+      const res = await fetch(`/api/items/${itemId}`, { method: "DELETE" });
+      if (res.ok) {
+        router.refresh();
+      }
     } finally {
       setLoading(false);
     }
@@ -24,12 +26,14 @@ export default function ProfileItemActions({ itemId, status }: { itemId: string,
     setLoading(true);
     const newStatus = status === "ACTIVE" ? "RESOLVED" : "ACTIVE";
     try {
-      await fetch(`/api/items/${itemId}`, {
+      const res = await fetch(`/api/items/${itemId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       });
-      router.refresh();
+      if (res.ok) {
+        router.refresh();
+      }
     } finally {
       setLoading(false);
     }
@@ -42,12 +46,12 @@ export default function ProfileItemActions({ itemId, status }: { itemId: string,
         size="sm" 
         onClick={handleStatusToggle} 
         disabled={loading}
-        className={`flex-1 ${status === "RESOLVED" ? "bg-green-600 hover:bg-green-700 text-white" : "text-green-600 border-green-200 hover:bg-green-50"}`}
+        className={`flex-1 ${status === "RESOLVED" ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600" : "text-emerald-600 border-emerald-200 hover:bg-emerald-50"}`}
       >
         {status === "ACTIVE" ? (
           <><CheckCircle className="w-4 h-4 mr-1.5" /> Вирішено</>
         ) : (
-          <><RotateCcw className="w-4 h-4 mr-1.5" /> Повернути в активні</>
+          <><RotateCcw className="w-4 h-4 mr-1.5" /> Відновити</>
         )}
       </Button>
       

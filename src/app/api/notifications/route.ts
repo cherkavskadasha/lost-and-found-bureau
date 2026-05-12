@@ -3,31 +3,59 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
-export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json([], { status: 401 });
+export async function GET(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      return NextResponse.json([], { status: 401 });
+    }
 
-  const userId = (session.user as any).id;
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    });
 
-  const notifications = await prisma.notification.findMany({
-    where: { userId: userId },
-    orderBy: { createdAt: "desc" },
-    take: 10 
-  });
+    if (!user) return NextResponse.json([], { status: 404 });
 
-  return NextResponse.json(notifications);
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    await prisma.notification.deleteMany({
+      where: {
+        userId: user.id,
+        createdAt: { lt: sevenDaysAgo }
+      }
+    });
+
+    const notifications = await prisma.notification.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 20 
+    });
+
+    return NextResponse.json(notifications);
+  } catch (error) {
+    return NextResponse.json([], { status: 500 });
+  }
 }
 
-export async function PUT() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({}, { status: 401 });
+export async function PUT(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) return NextResponse.json({}, { status: 401 });
 
-  const userId = (session.user as any).id;
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email }
+    });
 
-  await prisma.notification.updateMany({
-    where: { userId: userId, isRead: false },
-    data: { isRead: true }
-  });
+    if (!user) return NextResponse.json({}, { status: 404 });
 
-  return NextResponse.json({ success: true });
+    await prisma.notification.updateMany({
+      where: { userId: user.id, isRead: false },
+      data: { isRead: true }
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({}, { status: 500 });
+  }
 }

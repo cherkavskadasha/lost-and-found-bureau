@@ -76,3 +76,31 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     return NextResponse.json({ message: "Помилка при видаленні" }, { status: 500 });
   }
 }
+
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ message: "Неавторизовано" }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const body = await req.json();
+    const { status } = body;
+
+    const item = await prisma.item.findUnique({ where: { id } });
+
+    if (!item || item.userId !== (session.user as any).id) {
+      return NextResponse.json({ message: "Немає доступу" }, { status: 403 });
+    }
+
+    const updatedItem = await prisma.item.update({
+      where: { id },
+      data: { status },
+    });
+
+    return NextResponse.json(updatedItem, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: "Помилка сервера" }, { status: 500 });
+  }
+}
