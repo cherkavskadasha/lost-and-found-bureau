@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Search, PlusCircle, ShieldCheck, PawPrint, Wallet, Clock, CheckCircle2, ArrowRight, AlertCircle, Eye } from "lucide-react";
 
@@ -5,7 +7,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-50">
       
-      <section className="relative bg-gradient-to-br from-sky-300 via-blue-200 to-sky-100 -mt-8 pt-20 pb-28 px-4">
+      <section className="relative bg-gradient-to-br from-sky-300 via-blue-200 to-sky-100 -mt-8 pt-20 pb-36 px-4">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-white/60 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-0 w-[30rem] h-[30rem] bg-sky-400/20 rounded-full blur-3xl"></div>
@@ -16,49 +18,55 @@ export default function HomePage() {
             Всеукраїнська база пошуку <br className="hidden md:block" />
             речей та домашніх тварин
           </h1>
-          <p className="text-base md:text-lg text-slate-700 mb-8 max-w-2xl mx-auto font-medium">
+          <p className="text-base md:text-lg text-slate-700 max-w-2xl mx-auto font-medium">
             Допомагаємо повертати важливе: від загублених документів і ключів до пухнастих улюбленців. 
           </p>
-          
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/lost" className="bg-white hover:bg-slate-50 text-blue-600 px-8 py-3.5 rounded-full font-bold transition-all shadow-md flex items-center gap-2 hover:-translate-y-0.5">
-              <Search className="w-5 h-5" /> Знайти оголошення
-            </Link>
-          </div>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 max-w-5xl -mt-16 relative z-20 mb-16">
+      <section className="container mx-auto px-4 max-w-5xl -mt-24 relative z-20 mb-16">
         <div className="bg-white/95 backdrop-blur-md rounded-3xl shadow-xl shadow-sky-900/5 border border-white p-6 md:p-10">
           <h2 className="text-2xl font-bold text-slate-800 mb-8 text-center md:text-left">Що у вас сталося?</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Link href="/create" className="group flex flex-col items-center md:items-start bg-blue-50/70 hover:bg-blue-100 p-8 rounded-2xl border border-blue-100/50 transition-all hover:shadow-md hover:-translate-y-1">
+            <Link href="/found" className="group flex flex-col items-center md:items-start bg-blue-50/70 hover:bg-blue-100 p-8 rounded-2xl border border-blue-100/50 transition-all hover:shadow-md hover:-translate-y-1">
               <div className="w-14 h-14 bg-white rounded-2xl shadow-sm border border-blue-50 flex items-center justify-center mb-6 text-blue-600 group-hover:scale-110 transition-transform">
                 <AlertCircle className="w-7 h-7" />
               </div>
               <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-blue-700 transition-colors">Я загубив</h3>
               <p className="text-slate-600 text-center md:text-left text-sm mb-6 leading-relaxed flex-grow">
-                Втратили улюбленця, документи, гаманець чи ключі? Розмістіть оголошення, щоб люди могли вам допомогти.
+                Втратили улюбленця або важливу річ? Перевірте базу знахідок — можливо, хтось вже шукає саме вас, щоб повернути втрачене.
               </p>
               <div className="mt-auto flex items-center text-blue-600 font-bold text-sm">
-                Створити оголошення <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform" />
+                Переглянути знайдені речі <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform" />
               </div>
             </Link>
 
-            <Link href="/create" className="group flex flex-col items-center md:items-start bg-emerald-50/70 hover:bg-emerald-100 p-8 rounded-2xl border border-emerald-100/50 transition-all hover:shadow-md hover:-translate-y-1">
+            <Link href="/lost" className="group flex flex-col items-center md:items-start bg-emerald-50/70 hover:bg-emerald-100 p-8 rounded-2xl border border-emerald-100/50 transition-all hover:shadow-md hover:-translate-y-1">
               <div className="w-14 h-14 bg-white rounded-2xl shadow-sm border border-emerald-50 flex items-center justify-center mb-6 text-emerald-600 group-hover:scale-110 transition-transform">
                 <Eye className="w-7 h-7" />
               </div>
               <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-emerald-700 transition-colors">Я знайшов</h3>
               <p className="text-slate-600 text-center md:text-left text-sm mb-6 leading-relaxed flex-grow">
-                Знайшли чужу річ або тварину на вулиці? Допоможіть їм повернутися додому безпечно.
+                Знайшли чужу річ на вулиці? Перегляньте оголошення про втрати — справжній власник, ймовірно, вже б'є на сполох.
               </p>
               <div className="mt-auto flex items-center text-emerald-600 font-bold text-sm">
-                Повідомити про знахідку <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform" />
+                Переглянути загублені речі <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform" />
               </div>
             </Link>
           </div>
+
+          <div className="mt-10 pt-8 border-t border-slate-100 flex flex-col items-center text-center">
+            <p className="text-slate-500 mb-6 max-w-lg mx-auto text-sm">
+              Не знайшли те, що шукали в списках? Створіть власне оголошення, щоб інші користувачі могли побачити вашу інформацію.
+            </p>
+            <Link href="/create">
+              <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-4 rounded-full font-bold transition-all shadow-md shadow-indigo-600/20 flex items-center gap-2 hover:-translate-y-0.5 hover:scale-[1.02]">
+                <PlusCircle className="w-5 h-5" /> Створити оголошення
+              </button>
+            </Link>
+          </div>
+
         </div>
       </section>
 
@@ -133,20 +141,6 @@ export default function HomePage() {
                 Унікальна система «контрольних запитань» гарантує, що річ повернеться до справжнього власника, а не до афериста.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 bg-slate-50">
-        <div className="container mx-auto px-4 max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-slate-800 mb-8">Переглянути базу оголошень</h2>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/lost" className="flex-1 bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-200 text-slate-700 hover:text-blue-700 py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-3 shadow-sm">
-              <Wallet className="w-5 h-5" /> Загублені речі
-            </Link>
-            <Link href="/found" className="flex-1 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 text-slate-700 hover:text-emerald-700 py-4 px-6 rounded-2xl font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-3 shadow-sm">
-              <Search className="w-5 h-5" /> Знайдені речі
-            </Link>
           </div>
         </div>
       </section>

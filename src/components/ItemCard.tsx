@@ -28,7 +28,7 @@ export default function ItemCard({ item }: { item: any }) {
         </div>
 
         <div className="p-6 flex-grow flex flex-col">
-          <div className="flex justify-between items-start mb-4">
+          <div className="flex justify-between items-center mb-4 gap-2">
             <span className={`text-xs font-bold px-3 py-1 rounded-full ${
               item.type === 'LOST' 
                 ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' 
@@ -36,8 +36,8 @@ export default function ItemCard({ item }: { item: any }) {
             }`}>
               {item.type === 'LOST' ? 'Загублено' : 'Знайдено'}
             </span>
-            <span className="text-xs text-slate-400 flex items-center gap-1.5 font-medium">
-              <Calendar className="w-3.5 h-3.5" /> {date}
+            <span className="text-xs text-slate-400 flex items-center gap-1.5 font-medium whitespace-nowrap">
+              <Calendar className="w-3.5 h-3.5 flex-shrink-0" /> {date}
             </span>
           </div>
           
@@ -50,7 +50,7 @@ export default function ItemCard({ item }: { item: any }) {
           
           <div className="space-y-2.5 mt-auto pt-4 border-t border-slate-50">
             <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
-              <Tag className="w-4 h-4 text-slate-400" /> {item.category?.name || 'Інше'}
+              <Tag className="w-4 h-4 text-slate-400 flex-shrink-0" /> {item.category?.name || 'Інше'}
             </div>
             <div className="flex items-center gap-2 text-xs font-medium text-slate-500 line-clamp-1">
               <MapPin className="w-4 h-4 text-slate-400 flex-shrink-0" /> 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { Search, Compass, LogIn, LogOut, User, Settings, Menu, Shield, Bell } from "lucide-react";
+import { Compass, LogIn, LogOut, User, Settings, Menu, Shield, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -21,7 +21,6 @@ import { useState, useEffect } from "react";
 export default function Header() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
   
   const [notifications, setNotifications] = useState<any[]>([]);
   const unreadCount = notifications.filter(n => !n.isRead).length;
@@ -34,13 +33,6 @@ export default function Header() {
         .catch(err => console.error("Помилка сповіщень", err));
     }
   }, [status]);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/lost?query=${encodeURIComponent(searchQuery)}`);
-    }
-  };
 
   const handleMarkAsRead = async () => {
     if (unreadCount === 0) return;
@@ -55,13 +47,13 @@ export default function Header() {
         <div className="flex items-center gap-4">
           <div className="md:hidden">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex h-10 w-10 items-center justify-center text-slate-600 hover:bg-blue-50 hover:text-blue-600 rounded-full focus:outline-none">
+              <DropdownMenuTrigger className="flex h-10 w-10 items-center justify-center text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-full focus:outline-none">
                 <Menu className="h-6 w-6" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48 rounded-2xl border-slate-100 shadow-xl p-2 mt-2">
                 <DropdownMenuItem onClick={() => router.push("/lost")} className="rounded-xl py-3 cursor-pointer text-slate-700 font-medium">Загублені речі</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push("/found")} className="rounded-xl py-3 cursor-pointer text-slate-700 font-medium">Знайдені речі</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/create")} className="rounded-xl py-3 cursor-pointer text-blue-600 font-bold bg-blue-50 mt-1 mb-1">+ Створити оголошення</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/create")} className="rounded-xl py-3 cursor-pointer text-indigo-600 font-bold bg-indigo-50 mt-1 mb-1">+ Створити оголошення</DropdownMenuItem>
                 
                 {(session?.user as any)?.role === "ADMIN" && (
                   <DropdownMenuItem onClick={() => router.push("/admin")} className="rounded-xl py-3 cursor-pointer text-emerald-600 font-bold bg-emerald-50 mt-1 border border-emerald-100">
@@ -82,15 +74,11 @@ export default function Header() {
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-8 flex-1 justify-center max-w-2xl px-8">
-          <nav className="flex gap-6">
-            <Link href="/lost" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors">Загублено</Link>
-            <Link href="/found" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors">Знайдено</Link>
+        <div className="hidden md:flex items-center flex-1 justify-center max-w-2xl px-8">
+          <nav className="flex gap-8">
+            <Link href="/lost" className="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">Загублено</Link>
+            <Link href="/found" className="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">Знайдено</Link>
           </nav>
-          <form onSubmit={handleSearch} className="relative w-full max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <input type="text" placeholder="Шукати оголошення..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full h-10 pl-10 pr-4 rounded-full bg-white/80 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm placeholder:text-slate-400" />
-          </form>
         </div>
 
         <div className="flex items-center justify-end gap-3 min-w-[120px]">
@@ -99,7 +87,9 @@ export default function Header() {
           ) : session ? (
             <div className="flex items-center gap-2 sm:gap-4">
               <Link href="/create" className="hidden lg:flex">
-                <Button variant="outline" className="h-10 rounded-full border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 hover:border-blue-300 font-bold shadow-sm transition-all">Створити оголошення</Button>
+                <Button className="h-10 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 shadow-md shadow-indigo-600/20 transition-all hover:scale-[1.02] border-0">
+                  Створити оголошення
+                </Button>
               </Link>
 
               <DropdownMenu onOpenChange={(open) => open && handleMarkAsRead()}>
@@ -134,7 +124,8 @@ export default function Header() {
               <DropdownMenu>
                 <DropdownMenuTrigger className="relative h-11 w-11 rounded-full focus:outline-none ring-2 ring-transparent focus-visible:ring-blue-500 transition-all hover:ring-blue-200 ml-2">
                   <Avatar className="h-11 w-11 border-2 border-white shadow-md">
-                    <AvatarImage src={session.user?.image || undefined} alt={session.user?.name || "User"} />                    <AvatarFallback className="bg-gradient-to-br from-blue-100 to-sky-100 text-blue-700 font-bold">{session.user?.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
+                    <AvatarImage src={session.user?.image || undefined} alt={session.user?.name || "User"} />
+                    <AvatarFallback className="bg-gradient-to-br from-indigo-100 to-sky-100 text-indigo-700 font-bold">{session.user?.name?.[0]?.toUpperCase() || "U"}</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 
@@ -147,10 +138,10 @@ export default function Header() {
                       </div>
                     </DropdownMenuLabel>
                   </DropdownMenuGroup>
-                  <DropdownMenuItem className="cursor-pointer text-slate-700 focus:bg-blue-50 focus:text-blue-700 rounded-xl py-3 font-medium" onClick={() => router.push("/profile")}>
+                  <DropdownMenuItem className="cursor-pointer text-slate-700 focus:bg-indigo-50 focus:text-indigo-700 rounded-xl py-3 font-medium" onClick={() => router.push("/profile")}>
                     <User className="mr-3 h-4 w-4" /> Мій кабінет
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer text-slate-700 focus:bg-blue-50 focus:text-blue-700 rounded-xl py-3 font-medium" onClick={() => router.push("/profile/edit")}>
+                  <DropdownMenuItem className="cursor-pointer text-slate-700 focus:bg-indigo-50 focus:text-indigo-700 rounded-xl py-3 font-medium" onClick={() => router.push("/profile/edit")}>
                     <Settings className="mr-3 h-4 w-4" /> Налаштування
                   </DropdownMenuItem>
                   {(session.user as any)?.role === "ADMIN" && (
@@ -170,7 +161,7 @@ export default function Header() {
             </div>
           ) : (
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button onClick={() => signIn()} className="gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 h-10 shadow-lg shadow-blue-600/20 font-bold transition-all">
+              <Button onClick={() => signIn()} className="gap-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full px-6 h-10 shadow-lg shadow-indigo-600/20 font-bold transition-all">
                 <LogIn className="h-4 w-4" /> Увійти
               </Button>
             </motion.div>
