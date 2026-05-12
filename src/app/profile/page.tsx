@@ -3,10 +3,11 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
-import { Plus, Settings, Mail, Shield, FileText, Search, MapPin, Phone, Send, User as UserIcon } from "lucide-react";
+import { Plus, Settings, Mail, Shield, FileText, Search, MapPin, Phone, Send, User as UserIcon, MessageCircle } from "lucide-react";
 import ItemCard from "@/components/ItemCard";
 import ProfileItemActions from "@/components/ProfileItemActions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ClaimDeleteButton from "@/components/ClaimDeleteButton";
 
 export const dynamic = 'force-dynamic';
 
@@ -22,9 +23,27 @@ export default async function ProfilePage() {
 
   if (!user) redirect("/login");
 
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  await prisma.claim.deleteMany({
+    where: {
+      createdAt: { lt: sevenDaysAgo }
+    }
+  });
+
   const items = await prisma.item.findMany({
     where: { userId: user.id },
     include: { category: true },
+    orderBy: { createdAt: "desc" }
+  });
+
+  const receivedClaims = await prisma.claim.findMany({
+    where: { item: { userId: user.id } },
+    include: {
+      item: true,
+      claimant: true
+    },
     orderBy: { createdAt: "desc" }
   });
 
@@ -147,7 +166,53 @@ export default async function ProfilePage() {
           </div>
         </div>
 
-        <div className="mb-6 flex items-center gap-2">
+        {receivedClaims.length > 0 && (
+          <div className="mb-10">
+            <div className="flex items-center gap-2 mb-6">
+              <MessageCircle className="w-5 h-5 text-amber-500" />
+              <h2 className="text-xl font-bold text-slate-800">Заявки на ваші знахідки</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {receivedClaims.map(claim => (
+                <div key={claim.id} className="bg-amber-50/50 rounded-2xl p-6 border border-amber-200 shadow-sm transition-all hover:shadow-md hover:bg-amber-50">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <span className="text-xs font-bold uppercase text-amber-600 bg-amber-100 px-2 py-1 rounded-md">Заявка</span>
+                      <Link href={`/item/${claim.item.id}`}>
+                        <h3 className="font-bold text-slate-800 mt-2 text-lg line-clamp-1 hover:text-amber-600 transition-colors">{claim.item.title}</h3>
+                      </Link>
+                    </div>
+                    <ClaimDeleteButton claimId={claim.id} />
+                  </div>
+                  <div className="bg-white rounded-xl p-4 border border-amber-100 mb-4 relative">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Відповідь користувача:</p>
+                    <p className="text-slate-700 font-medium italic">"{claim.answer}"</p>
+                  </div>
+                  <div className="space-y-2 text-sm pt-2 border-t border-amber-100">
+                    <p className="font-bold text-slate-800 flex items-center gap-2">
+                      <UserIcon className="w-4 h-4 text-slate-400" /> {claim.claimant.name}
+                    </p>
+                    {claim.claimant.phone && (
+                      <p className="text-slate-600 flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-slate-400" /> {claim.claimant.phone}
+                      </p>
+                    )}
+                    {claim.claimant.telegram && (
+                      <p className="text-slate-600 flex items-center gap-2">
+                        <Send className="w-4 h-4 text-slate-400" /> {claim.claimant.telegram}
+                      </p>
+                    )}
+                    <p className="text-slate-600 flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-slate-400" /> {claim.claimant.email}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="mb-6 flex items-center gap-2 mt-12">
           <Search className="w-5 h-5 text-slate-400" />
           <h2 className="text-xl font-bold text-slate-800">Ваші публікації</h2>
         </div>

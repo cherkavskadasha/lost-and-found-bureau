@@ -26,7 +26,6 @@ export default function CreateItemPage() {
     city: "", 
     location: "",
     controlQuestion: "",
-    controlAnswer: "",
     imageUrl: "",
     latitude: null as number | null,
     longitude: null as number | null,
@@ -207,7 +206,7 @@ export default function CreateItemPage() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div className="pt-2">
                 <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-orange-800">Контрольне запитання</label>
                   <input 
@@ -216,16 +215,6 @@ export default function CreateItemPage() {
                     className="w-full h-11 px-3 rounded-lg border border-orange-200 text-sm focus:ring-2 focus:ring-orange-400 outline-none bg-white/80"
                     value={formData.controlQuestion}
                     onChange={(e) => setFormData({ ...formData, controlQuestion: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-orange-800">Правильна відповідь</label>
-                  <input 
-                    type="text" 
-                    placeholder="Квиток у кіно" 
-                    className="w-full h-11 px-3 rounded-lg border border-orange-200 text-sm focus:ring-2 focus:ring-orange-400 outline-none bg-white/80"
-                    value={formData.controlAnswer}
-                    onChange={(e) => setFormData({ ...formData, controlAnswer: e.target.value })}
                   />
                 </div>
               </div>

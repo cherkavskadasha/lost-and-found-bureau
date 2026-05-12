@@ -4,6 +4,7 @@ import Link from "next/link";
 import { MapPin, Calendar, Mail, AlertTriangle, ChevronLeft, ShieldCheck, Tag, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ClientMap from "@/components/ClientMap";
+import ClaimForm from "@/components/ClaimForm";
 
 export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -101,19 +102,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
               )}
 
               {item.controlQuestion && (
-                <div className="bg-amber-50 rounded-2xl p-6 border border-amber-200 mt-6 md:mt-8">
-                  <div className="flex items-center gap-3 mb-3">
-                    <AlertTriangle className="w-5 h-5 text-amber-600" />
-                    <h2 className="text-md font-bold text-amber-900">Перевірка власника</h2>
-                  </div>
-                  <p className="text-amber-800 text-sm mb-4">
-                    Автор вказав контрольне запитання, щоб переконатися, що річ належить саме вам.
-                  </p>
-                  <div className="bg-white rounded-xl p-4 border border-amber-100">
-                    <span className="text-xs font-bold text-amber-500 uppercase tracking-wider block mb-1">Запитання:</span>
-                    <span className="text-slate-800 font-medium">{item.controlQuestion}</span>
-                  </div>
-                </div>
+                <ClaimForm itemId={item.id} question={item.controlQuestion} />
               )}
             </div>
           </div>
@@ -147,13 +136,15 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                 </div>
               </Link>
 
-              <a href={`mailto:${item.user?.email}`}>
-                <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 rounded-xl font-bold transition-all shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 hover:scale-[1.02]">
-                  <Mail className="w-4 h-4" /> Написати автору
-                </button>
-              </a>
+              {!item.controlQuestion && (
+                <a href={`mailto:${item.user?.email}`}>
+                  <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-12 rounded-xl font-bold transition-all shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2 hover:scale-[1.02]">
+                    <Mail className="w-4 h-4" /> Написати автору
+                  </button>
+                </a>
+              )}
 
-              <div className="mt-6 pt-5 border-t border-slate-100 text-center">
+              <div className={`pt-5 text-center ${!item.controlQuestion ? "mt-6 border-t border-slate-100" : ""}`}>
                 <p className="text-xs text-slate-400 leading-relaxed">
                   Будьте обережні при зустрічі та не переказуйте гроші заздалегідь. Перевіряйте річ на місці.
                 </p>

@@ -40,6 +40,7 @@ model User {
   sessions      Session[]
   items         Item[]
   notifications Notification[] 
+  claims        Claim[]
 }
 
 model Category {
@@ -58,7 +59,6 @@ model Item {
   city            String?
   location        String?
   controlQuestion String?
-  controlAnswer   String?
   imageUrl        String?
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
@@ -70,6 +70,7 @@ model Item {
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
   images     Image[]
+  claims     Claim[]
 }
 
 model Image {
@@ -77,6 +78,18 @@ model Image {
   url    String
   itemId String
   item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+model Claim {
+  id          String   @id @default(cuid())
+  answer      String
+  createdAt   DateTime @default(now())
+  
+  itemId      String
+  item        Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  
+  claimantId  String
+  claimant    User     @relation(fields: [claimantId], references: [id], onDelete: Cascade)
 }
 
 // тех.таблиці auth

@@ -23,6 +23,7 @@ export default function EditItemPage() {
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
+    type: "",
     categorySlug: "other",
     title: "",
     description: "",
@@ -30,7 +31,6 @@ export default function EditItemPage() {
     location: "",
     imageUrl: "",
     controlQuestion: "",
-    // Додаємо координати сюди
     latitude: null as number | null,
     longitude: null as number | null,
   });
@@ -49,6 +49,7 @@ export default function EditItemPage() {
         const data = await res.json();
         
         setFormData({
+          type: data.type || "",
           categorySlug: data.category?.slug || "other", 
           title: data.title || "",
           description: data.description || "",
@@ -168,14 +169,16 @@ export default function EditItemPage() {
             </label>
             <textarea required rows={4} className="w-full p-4 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 outline-none resize-none transition-all" value={formData.description} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} />
           </div>
-          
-          <div className="space-y-1.5">
-             <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-               Контрольне запитання
-            </label>
-            <input type="text" className="w-full h-12 px-4 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 outline-none font-medium transition-all" value={formData.controlQuestion} onChange={(e) => setFormData(prev => ({ ...prev, controlQuestion: e.target.value }))} placeholder="Наприклад: Яка подряпина на екрані?"/>
-             <p className="text-xs text-slate-500 mt-1">Допоможе переконатися, що річ належить саме власнику.</p>
-          </div>
+
+          {formData.type === "FOUND" && (
+            <div className="space-y-1.5">
+              <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                Контрольне запитання
+              </label>
+              <input type="text" className="w-full h-12 px-4 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 outline-none font-medium transition-all" value={formData.controlQuestion} onChange={(e) => setFormData(prev => ({ ...prev, controlQuestion: e.target.value }))} placeholder="Наприклад: Яка подряпина на екрані?"/>
+              <p className="text-xs text-slate-500 mt-1">Допоможе переконатися, що річ належить саме власнику.</p>
+            </div>
+          )}
 
           {error && <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-100 text-center">{error}</div>}
 
