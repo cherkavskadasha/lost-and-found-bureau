@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MapPin, Calendar, Mail, AlertTriangle, ChevronLeft, ShieldCheck, Tag, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ClientMap from "@/components/ClientMap";
 
 export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -28,7 +29,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-8 space-y-8">
               
               <div className="flex items-center gap-3">
@@ -42,7 +43,6 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
               </div>
 
               <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start pb-6 border-b border-slate-100">
-                
                 <div className="bg-slate-50 aspect-square rounded-2xl overflow-hidden border border-slate-100 flex items-center justify-center w-full md:w-2/5 flex-shrink-0">
                   {item.imageUrl ? (
                     <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
@@ -63,14 +63,16 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                     </p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-3 border-t border-slate-100">
+                  <div className="flex flex-col gap-4 pt-3 border-t border-slate-100">
                     <div className="flex items-center gap-3 text-slate-600">
                       <div className="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center flex-shrink-0 border border-slate-100">
                         <MapPin className="w-4.5 h-4.5 text-indigo-500" />
                       </div>
                       <div>
                         <p className="text-xs font-bold text-slate-400 uppercase">Місце</p>
-                        <p className="font-semibold text-slate-800 text-sm">{item.location || item.city || "Не вказано"}</p>
+                        <p className="font-semibold text-slate-800 text-sm">
+                          {[item.city, item.location].filter(Boolean).join(", ") || "Не вказано"}
+                        </p>
                       </div>
                     </div>
 
@@ -80,12 +82,23 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                       </div>
                       <div>
                         <p className="text-xs font-bold text-slate-400 uppercase">Опубліковано</p>
-                        <p className="font-semibold text-slate-800 text-sm">{new Date(item.createdAt).toLocaleDateString("uk-UA", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                        <p className="font-semibold text-slate-800 text-sm">
+                          {new Date(item.createdAt).toLocaleDateString("uk-UA", { day: 'numeric', month: 'long', year: 'numeric' })}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+
+              {item.latitude && item.longitude && (
+                <div className="space-y-4">
+                  <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-indigo-500" /> Місце на карті
+                  </h2>
+                  <ClientMap latitude={item.latitude} longitude={item.longitude} />
+                </div>
+              )}
 
               {item.controlQuestion && (
                 <div className="bg-amber-50 rounded-2xl p-6 border border-amber-200 mt-6 md:mt-8">
@@ -102,13 +115,11 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                   </div>
                 </div>
               )}
-
             </div>
           </div>
 
           <div className="lg:col-span-1">
             <div className="sticky top-24 bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-              
               <h3 className="text-sm font-bold text-slate-800 mb-6">Контактна особа</h3>
               
               <Link href={`/user/${item.userId}`}>
@@ -123,7 +134,6 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                     <p className="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors line-clamp-1">
                       {item.user?.name || "Користувач системи"}
                     </p>
-                    
                     {item.user?.phone ? (
                       <p className="text-xs text-slate-500 flex items-center gap-1 mt-1">
                         <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Верифікований
@@ -148,7 +158,6 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                   Будьте обережні при зустрічі та не переказуйте гроші заздалегідь. Перевіряйте річ на місці.
                 </p>
               </div>
-
             </div>
           </div>
 

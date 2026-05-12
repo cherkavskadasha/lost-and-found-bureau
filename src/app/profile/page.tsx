@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Plus, Settings, Mail, Shield, FileText, Search, MapPin, Phone, Send, User as UserIcon } from "lucide-react";
 import ItemCard from "@/components/ItemCard";
 import ProfileItemActions from "@/components/ProfileItemActions";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const dynamic = 'force-dynamic';
 
@@ -38,15 +39,16 @@ export default async function ProfilePage() {
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-8">
             <div className="flex items-end gap-6">
-              <div className="w-32 h-32 bg-white rounded-full p-2 shadow-sm border border-slate-100 flex-shrink-0">
-                {user.image ? (
-                  <img src={user.image} alt={user.name || "User"} className="w-full h-full rounded-full object-cover" />
-                ) : (
-                  <div className="w-full h-full bg-indigo-50 rounded-full flex items-center justify-center text-4xl font-bold text-indigo-600">
+              
+              <div className="w-32 h-32 bg-white rounded-full p-1.5 shadow-sm border border-slate-100 flex-shrink-0">
+                <Avatar className="w-full h-full">
+                  <AvatarImage src={user.image?.startsWith("http") ? user.image : undefined} className="object-cover" />
+                  <AvatarFallback className="text-4xl bg-indigo-50 text-indigo-600 font-bold">
                     {user.name?.[0]?.toUpperCase() || "U"}
-                  </div>
-                )}
+                  </AvatarFallback>
+                </Avatar>
               </div>
+
               <div className="pb-2">
                 <h1 className="text-3xl font-extrabold text-slate-800">{user.name}</h1>
                 <p className="text-slate-500 flex items-center gap-2 mt-1">

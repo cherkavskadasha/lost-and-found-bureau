@@ -6,6 +6,12 @@ import { MapPin, FileText, Loader2, Building2, Save, ArrowLeft } from "lucide-re
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ImageUpload from "@/components/ImageUpload";
+import dynamic from "next/dynamic";
+
+const MapPicker = dynamic(() => import("@/components/MapPicker"), { 
+  ssr: false,
+  loading: () => <div className="h-[300px] w-full bg-slate-100 animate-pulse rounded-xl flex items-center justify-center text-slate-400">Завантаження карти...</div>
+});
 
 export default function EditItemPage() {
   const router = useRouter();
@@ -24,6 +30,9 @@ export default function EditItemPage() {
     location: "",
     imageUrl: "",
     controlQuestion: "",
+    // Додаємо координати сюди
+    latitude: null as number | null,
+    longitude: null as number | null,
   });
 
   useEffect(() => {
@@ -47,6 +56,8 @@ export default function EditItemPage() {
           location: data.location || "",
           imageUrl: data.imageUrl || "",
           controlQuestion: data.controlQuestion || "",
+          latitude: data.latitude || null,
+          longitude: data.longitude || null,
         });
       } catch (err: any) {
         setError(err.message);
@@ -133,6 +144,17 @@ export default function EditItemPage() {
               </label>
               <input type="text" required className="w-full h-12 px-4 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all" value={formData.location} onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))} />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-indigo-500" /> Місце на карті
+            </label>
+            <MapPicker 
+              position={formData.latitude && formData.longitude ? [formData.latitude, formData.longitude] : null}
+              onChange={(pos) => setFormData({ ...formData, latitude: pos[0], longitude: pos[1] })}
+            />
+            <p className="text-xs text-slate-400">Можете оновити мітку, якщо потрібно вказати точніше місце.</p>
           </div>
 
           <div className="space-y-1.5">

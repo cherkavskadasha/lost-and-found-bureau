@@ -2,10 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, MapPin, FileText, HelpCircle, AlertCircle, Loader2, Building2 } from "lucide-react"; 
+import { Search, MapPin, FileText, HelpCircle, AlertCircle, Loader2, Building2, ArrowLeft } from "lucide-react"; 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ImageUpload from "@/components/ImageUpload";
+import dynamic from "next/dynamic";
+
+const MapPicker = dynamic(() => import("@/components/MapPicker"), { 
+  ssr: false,
+  loading: () => <div className="h-[300px] w-full bg-slate-100 animate-pulse rounded-xl flex items-center justify-center text-slate-400">Завантаження карти...</div>
+});
 
 export default function CreateItemPage() {
   const router = useRouter();
@@ -22,6 +28,8 @@ export default function CreateItemPage() {
     controlQuestion: "",
     controlAnswer: "",
     imageUrl: "",
+    latitude: null as number | null,
+    longitude: null as number | null,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,6 +64,9 @@ export default function CreateItemPage() {
     <div className="container mx-auto px-4 py-8 max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
       
       <div className="mb-8">
+        <Link href="/" className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-indigo-600 mb-4 transition-colors">
+          <ArrowLeft className="w-4 h-4 mr-2" /> На головну
+        </Link>
         <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Створити оголошення</h1>
         <p className="text-slate-500 mt-2">Заповніть деталі про річ, щоб ми допомогли її знайти або повернути.</p>
       </div>
@@ -119,7 +130,7 @@ export default function CreateItemPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                  <Building2 className="w-4 h-4 text-slate-400" /> Місто
+                  <Building2 className="w-4 h-4 text-indigo-500" /> Місто
                 </label>
                 <input 
                   type="text" 
@@ -133,7 +144,7 @@ export default function CreateItemPage() {
 
               <div className="space-y-1.5">
                 <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-slate-400" /> Де це було?
+                  <MapPin className="w-4 h-4 text-indigo-500" /> Де це було?
                 </label>
                 <input 
                   type="text" 
@@ -144,6 +155,17 @@ export default function CreateItemPage() {
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-indigo-500" /> Поставте мітку на карті
+              </label>
+              <MapPicker 
+                position={formData.latitude && formData.longitude ? [formData.latitude, formData.longitude] : null}
+                onChange={(pos) => setFormData({ ...formData, latitude: pos[0], longitude: pos[1] })}
+              />
+              <p className="text-xs text-slate-400">Клацніть на карту, щоб вказати точне місце події.</p>
             </div>
 
             <div className="space-y-1.5">
@@ -160,7 +182,7 @@ export default function CreateItemPage() {
 
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-slate-400" /> Детальний опис
+                <FileText className="w-4 h-4 text-indigo-500" /> Детальний опис
               </label>
               <textarea 
                 required

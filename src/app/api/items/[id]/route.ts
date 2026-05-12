@@ -42,8 +42,10 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         location: body.location,
         imageUrl: body.imageUrl,
         controlQuestion: body.controlQuestion,
+        latitude: body.latitude,
+        longitude: body.longitude,
         category: {
-          connect: { slug: body.categorySlug } 
+          connect: { slug: body.categorySlug }
         }
       }
     });

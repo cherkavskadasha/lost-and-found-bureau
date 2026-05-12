@@ -14,15 +14,15 @@ export async function PATCH(req: Request) {
     const body = await req.json();
     const { name, phone, telegram, city, image } = body; 
 
+    const dataToUpdate: any = { name, phone, telegram, city };
+
+    if (image && image.trim() !== "" && image !== "undefined") {
+      dataToUpdate.image = image;
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id: (session.user as any).id },
-      data: { 
-        name, 
-        phone, 
-        telegram, 
-        city, 
-        image 
-      }, 
+      data: dataToUpdate, 
     });
 
     return NextResponse.json(updatedUser);
