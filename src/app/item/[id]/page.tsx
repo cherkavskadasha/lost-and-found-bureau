@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MapPin, Calendar, Mail, AlertTriangle, ChevronLeft, ShieldCheck, Tag, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import ClientMap from "@/components/ClientMap";
 
 export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
@@ -64,14 +63,16 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                     </p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-3 border-t border-slate-100">
+                  <div className="flex flex-col gap-4 pt-3 border-t border-slate-100">
                     <div className="flex items-center gap-3 text-slate-600">
                       <div className="w-9 h-9 rounded-full bg-slate-50 flex items-center justify-center flex-shrink-0 border border-slate-100">
                         <MapPin className="w-4.5 h-4.5 text-indigo-500" />
                       </div>
                       <div>
                         <p className="text-xs font-bold text-slate-400 uppercase">Місце</p>
-                        <p className="font-semibold text-slate-800 text-sm">{item.location || item.city || "Не вказано"}</p>
+                        <p className="font-semibold text-slate-800 text-sm">
+                          {[item.city, item.location].filter(Boolean).join(", ") || "Не вказано"}
+                        </p>
                       </div>
                     </div>
 
@@ -81,7 +82,9 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
                       </div>
                       <div>
                         <p className="text-xs font-bold text-slate-400 uppercase">Опубліковано</p>
-                        <p className="font-semibold text-slate-800 text-sm">{new Date(item.createdAt).toLocaleDateString("uk-UA", { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                        <p className="font-semibold text-slate-800 text-sm">
+                          {new Date(item.createdAt).toLocaleDateString("uk-UA", { day: 'numeric', month: 'long', year: 'numeric' })}
+                        </p>
                       </div>
                     </div>
                   </div>
