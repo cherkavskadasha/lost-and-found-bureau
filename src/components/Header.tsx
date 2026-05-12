@@ -18,11 +18,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
+interface Notification {
+  id: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
 export default function Header() {
   const { data: session, status } = useSession();
   const router = useRouter();
   
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   useEffect(() => {
@@ -40,6 +47,8 @@ export default function Header() {
     setNotifications(notifications.map(n => ({ ...n, isRead: true })));
   };
 
+  const userRole = (session?.user as { role?: string })?.role;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/50 bg-white/70 backdrop-blur-lg shadow-sm">
       <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -55,7 +64,7 @@ export default function Header() {
                 <DropdownMenuItem onClick={() => router.push("/found")} className="rounded-xl py-3 cursor-pointer text-slate-700 font-medium">Знайдені речі</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push("/create")} className="rounded-xl py-3 cursor-pointer text-indigo-600 font-bold bg-indigo-50 mt-1 mb-1">+ Створити оголошення</DropdownMenuItem>
                 
-                {(session?.user as any)?.role === "ADMIN" && (
+                {userRole === "ADMIN" && (
                   <DropdownMenuItem onClick={() => router.push("/admin")} className="rounded-xl py-3 cursor-pointer text-emerald-600 font-bold bg-emerald-50 mt-1 border border-emerald-100">
                     <Shield className="mr-2 h-4 w-4" /> Адмін-панель
                   </DropdownMenuItem>
@@ -144,7 +153,7 @@ export default function Header() {
                   <DropdownMenuItem className="cursor-pointer text-slate-700 focus:bg-indigo-50 focus:text-indigo-700 rounded-xl py-3 font-medium" onClick={() => router.push("/profile/edit")}>
                     <Settings className="mr-3 h-4 w-4" /> Налаштування
                   </DropdownMenuItem>
-                  {(session.user as any)?.role === "ADMIN" && (
+                  {userRole === "ADMIN" && (
                     <>
                       <DropdownMenuSeparator className="bg-slate-100 my-1" />
                       <DropdownMenuItem className="cursor-pointer text-emerald-700 focus:bg-emerald-50 focus:text-emerald-800 rounded-xl py-3 font-bold" onClick={() => router.push("/admin")}>

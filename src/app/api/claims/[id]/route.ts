@@ -6,7 +6,9 @@ import prisma from "@/lib/prisma";
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || !session.user?.id) {
+    const userId = (session?.user as { id?: string })?.id;
+
+    if (!session || !userId) {
       return NextResponse.json({ message: "Неавторизовано" }, { status: 401 });
     }
 
@@ -17,7 +19,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       include: { item: true }
     });
 
-    if (!claim || claim.item.userId !== (session.user as any).id) {
+    if (!claim || claim.item.userId !== userId) {
       return NextResponse.json({ message: "Немає доступу" }, { status: 403 });
     }
 

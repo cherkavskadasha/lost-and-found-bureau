@@ -5,19 +5,54 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Loader2, Trash2, Package, Users, PieChart, ShieldCheck } from "lucide-react";
 
+interface AdminItem {
+  id: string;
+  title: string;
+  user?: {
+    email: string;
+  };
+}
+
+interface AdminUser {
+  id: string;
+  name: string | null;
+  email: string;
+  role: string;
+  _count?: {
+    items: number;
+  };
+}
+
+interface AdminStats {
+  totalItems: number;
+  totalUsers: number;
+  lostCount: number;
+  foundCount: number;
+}
+
+interface StatCardProps {
+  icon: React.ReactNode;
+  label: string;
+  value?: number;
+  color: string;
+}
+
 export default function AdminPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("items");
-  const [items, setItems] = useState<any[]>([]);
-  const [users, setUsers] = useState<any[]>([]);
-  const [stats, setStats] = useState<any>(null);
+  
+  const [items, setItems] = useState<AdminItem[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (status === "loading") return;
 
-    if (status === "unauthenticated" || (session?.user as any)?.role !== "ADMIN") {
+    const userRole = (session?.user as { role?: string })?.role;
+
+    if (status === "unauthenticated" || userRole !== "ADMIN") {
       router.push("/");
       return;
     }
@@ -48,7 +83,9 @@ export default function AdminPage() {
 
     if (res.ok) {
       setItems(items.filter((item) => item.id !== id));
-      setStats((prev: any) => ({ ...prev, totalItems: prev.totalItems - 1 }));
+      setStats((prev: AdminStats | null) => 
+        prev ? { ...prev, totalItems: prev.totalItems - 1 } : null
+      );
     }
   };
 
@@ -130,7 +167,7 @@ export default function AdminPage() {
   );
 }
 
-function StatCard({ icon, label, value, color }: any) {
+function StatCard({ icon, label, value, color }: StatCardProps) {
   return (
     <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-5">
       <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${color}`}>{icon}</div>

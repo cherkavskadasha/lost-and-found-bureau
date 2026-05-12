@@ -5,10 +5,13 @@ import prisma from "@/lib/prisma";
 
 export async function PUT(req: Request) {
   const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+  const userId = (session?.user as { id?: string })?.id;
+
+  if (!session || !userId) {
+    return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+  }
 
   const { image, name } = await req.json();
-  const userId = (session.user as any).id;
 
   const updatedUser = await prisma.user.update({
     where: { id: userId },

@@ -52,8 +52,12 @@ export default function CreateItemPage() {
       router.push("/profile");
       router.refresh();
       
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Сталася невідома помилка");
+      }
     } finally {
       setLoading(false);
     }

@@ -80,7 +80,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || !session.user?.id) {
+    const userId = (session?.user as { id?: string })?.id;
+
+    if (!session || !userId) {
       return NextResponse.json({ message: "Неавторизовано" }, { status: 401 });
     }
 
@@ -90,7 +92,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
     const item = await prisma.item.findUnique({ where: { id } });
 
-    if (!item || item.userId !== (session.user as any).id) {
+    if (!item || item.userId !== userId) {
       return NextResponse.json({ message: "Немає доступу" }, { status: 403 });
     }
 

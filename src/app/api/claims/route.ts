@@ -6,7 +6,9 @@ import prisma from "@/lib/prisma";
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || !session.user?.id) {
+    const userId = (session?.user as { id?: string })?.id;
+
+    if (!session || !userId) {
       return NextResponse.json({ message: "Неавторизовано" }, { status: 401 });
     }
 
@@ -22,7 +24,7 @@ export async function POST(req: Request) {
     }
 
     const existingClaim = await prisma.claim.findFirst({
-      where: { itemId, claimantId: (session.user as any).id }
+      where: { itemId, claimantId: userId }
     });
 
     if (existingClaim) {
@@ -33,7 +35,7 @@ export async function POST(req: Request) {
       data: {
         itemId,
         answer,
-        claimantId: (session.user as any).id
+        claimantId: userId
       }
     });
 

@@ -60,8 +60,12 @@ export default function EditItemPage() {
           latitude: data.latitude || null,
           longitude: data.longitude || null,
         });
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Сталася невідома помилка");
+        }
       } finally {
         setLoading(false);
       }
@@ -89,8 +93,12 @@ export default function EditItemPage() {
       router.push("/profile");
       router.refresh();
       
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Сталася невідома помилка");
+      }
     } finally {
       setSaving(false);
     }

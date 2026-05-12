@@ -34,9 +34,13 @@ export default function ClaimForm({ itemId, question }: { itemId: string; questi
       setStatus("success");
       setMessage("Вашу відповідь успішно надіслано! Автор зв'яжеться з вами.");
       setAnswer("");
-    } catch (err: any) {
+    } catch (err) {
       setStatus("error");
-      setMessage(err.message);
+      if (err instanceof Error) {
+        setMessage(err.message);
+      } else {
+        setMessage("Сталася невідома помилка");
+      }
     } finally {
       setLoading(false);
     }

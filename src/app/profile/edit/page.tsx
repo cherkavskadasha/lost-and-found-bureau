@@ -9,6 +9,12 @@ import { useSession } from "next-auth/react";
 import { CldUploadWidget } from "next-cloudinary";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+interface CloudinaryUploadResult {
+  info?: {
+    secure_url?: string;
+  };
+}
+
 export default function EditProfilePage() {
   const router = useRouter();
   const { data: session, update } = useSession();
@@ -75,8 +81,12 @@ export default function EditProfilePage() {
 
       router.push("/profile");
       router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Сталася невідома помилка");
+      }
     } finally {
       setLoading(false);
     }
@@ -116,8 +126,9 @@ export default function EditProfilePage() {
                 resourceType: "image",
                 clientAllowedFormats: ["jpg", "jpeg", "png", "webp"],
               }}
-              onSuccess={(result: any) => {
-                const url = result?.info?.secure_url;
+              onSuccess={(result: unknown) => {
+                const res = result as CloudinaryUploadResult;
+                const url = res?.info?.secure_url;
                 if (url) {
                   setFormData({ ...formData, image: url });
                 }

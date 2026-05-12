@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github"; 
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { Adapter } from "next-auth/adapters";
 import prisma from "./prisma";
 
 declare module "next-auth" {
@@ -12,10 +13,22 @@ declare module "next-auth" {
       role: string;
     } & DefaultSession["user"]
   }
+
+  interface User {
+    id: string;
+    role: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    role: string;
+  }
 }
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
+  adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -43,7 +56,13 @@ export const authOptions: NextAuthOptions = {
         if (!user || !user.email) {
           throw new Error("Користувача не знайдено");
         }
-        return user as any;
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          image: user.image,
+          role: user.role
+        };
       }
     })
   ],
@@ -58,8 +77,8 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
-        token.role = (user as any).role;
-        token.image = user.image;
+        token.role = user.role;
+        token.image = user.image as string | null | undefined;
         token.name = user.name;
       }
       
@@ -70,12 +89,12 @@ export const authOptions: NextAuthOptions = {
       
       return token;
     },
-    async session({ session, token }: any) {
+    async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.name = token.name;
-        session.user.image = token.image;
+        session.user.image = token.image as string | null | undefined;
       }
       return session;
     }

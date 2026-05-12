@@ -2,7 +2,25 @@ import { MapPin, Calendar, Tag, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function ItemCard({ item }: { item: any }) {
+interface Item {
+  id: string;
+  createdAt: string | Date;
+  city?: string | null;
+  location?: string | null;
+  imageUrl?: string | null;
+  title: string;
+  type: "LOST" | "FOUND";
+  description: string;
+  category?: {
+    name: string;
+  } | null;
+}
+
+interface ItemCardProps {
+  item: Item;
+}
+
+export default function ItemCard({ item }: ItemCardProps) {
   const date = new Date(item.createdAt).toLocaleDateString('uk-UA', {
     day: 'numeric', month: 'long', year: 'numeric'
   });

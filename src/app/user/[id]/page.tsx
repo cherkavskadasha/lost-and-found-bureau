@@ -60,7 +60,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {activeItems.map((item) => (
               <div key={item.id} className="animate-in fade-in zoom-in duration-300">
-                <ItemCard item={item as any} />
+                <ItemCard item={item} />
               </div>
             ))}
           </div>

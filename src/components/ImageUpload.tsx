@@ -9,9 +9,18 @@ interface ImageUploadProps {
   onChange: (url: string) => void;
 }
 
+interface CloudinaryUploadResult {
+  info?: {
+    secure_url?: string;
+  };
+}
+
 export default function ImageUpload({ value, onChange }: ImageUploadProps) {
-  const onUpload = (result: any) => {
-    onChange(result.info.secure_url);
+  const onUpload = (result: unknown) => {
+    const res = result as CloudinaryUploadResult;
+    if (res?.info?.secure_url) {
+      onChange(res.info.secure_url);
+    }
   };
 
   return (
@@ -24,7 +33,7 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
               style={{ objectFit: "cover" }} 
               src={value} 
               alt="Uploaded Image" 
-              sizes="(max-width: 768px) 100vw, 200px" // Виправили попередження в консолі
+              sizes="(max-width: 768px) 100vw, 200px"
             />
             <div className="absolute top-2 right-2">
               <button

@@ -3,7 +3,13 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, MapPin, Calendar, Tag, X } from "lucide-react";
 
-export default function FilterPanel({ categories }: { categories: any[] }) {
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export default function FilterPanel({ categories }: { categories: Category[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 

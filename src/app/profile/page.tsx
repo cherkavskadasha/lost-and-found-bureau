@@ -11,17 +11,53 @@ import ClaimDeleteButton from "@/components/ClaimDeleteButton";
 
 export const dynamic = 'force-dynamic';
 
+interface ItemWithCategory {
+  id: string;
+  title: string;
+  description: string;
+  type: "LOST" | "FOUND";
+  status: string;
+  imageUrl: string | null;
+  city: string | null;
+  location: string | null;
+  createdAt: Date;
+  category: {
+    name: string;
+    slug: string;
+  } | null;
+}
+
+interface ClaimWithDetails {
+  id: string;
+  answer: string;
+  createdAt: Date;
+  item: {
+    id: string;
+    title: string;
+  };
+  claimant: {
+    name: string | null;
+    email: string;
+    phone: string | null;
+    telegram: string | null;
+  };
+}
+
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) {
+  const userEmail = session?.user?.email;
+
+  if (!userEmail) {
     redirect("/login");
   }
 
   const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
+    where: { email: userEmail },
   });
 
-  if (!user) redirect("/login");
+  if (!user) {
+    redirect("/login");
+  }
 
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -36,7 +72,7 @@ export default async function ProfilePage() {
     where: { userId: user.id },
     include: { category: true },
     orderBy: { createdAt: "desc" }
-  });
+  }) as ItemWithCategory[];
 
   const receivedClaims = await prisma.claim.findMany({
     where: { item: { userId: user.id } },
@@ -45,7 +81,7 @@ export default async function ProfilePage() {
       claimant: true
     },
     orderBy: { createdAt: "desc" }
-  });
+  }) as unknown as ClaimWithDetails[];
 
   const lostCount = items.filter(i => i.type === "LOST").length;
   const foundCount = items.filter(i => i.type === "FOUND").length;

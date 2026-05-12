@@ -6,7 +6,7 @@ import prisma from "@/lib/prisma";
 export async function GET() {
   const session = await getServerSession(authOptions);
   
-  if (!session || (session.user as any).role !== "ADMIN") {
+  if (!session || (session.user as { role?: string }).role !== "ADMIN") {
     return NextResponse.json({ message: "Доступ заборонено" }, { status: 403 });
   }
 
@@ -21,7 +21,7 @@ export async function GET() {
 export async function DELETE(req: Request) {
   const session = await getServerSession(authOptions);
   
-  if (!session || (session.user as any).role !== "ADMIN") {
+  if (!session || (session.user as { role?: string }).role !== "ADMIN") {
     return NextResponse.json({ message: "Доступ заборонено" }, { status: 403 });
   }
 
