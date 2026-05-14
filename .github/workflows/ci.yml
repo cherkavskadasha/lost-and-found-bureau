@@ -1,0 +1,38 @@
+name: CI (Lint & Test)
+
+on:
+  push:
+    branches: [ main, master, dev ] 
+  pull_request:
+    branches: [ main, master ]    
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest 
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run Lint
+        run: npm run lint
+        continue-on-error: false 
+
+      - name: Run Tests
+        run: npm run test:coverage
+        env:
+          DATABASE_URL: "postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
+          NEXTAUTH_SECRET: "mock_secret_for_ci"
+          NEXTAUTH_URL: "http://localhost:3000"
