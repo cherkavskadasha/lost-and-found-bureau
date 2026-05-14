@@ -6,6 +6,14 @@ jest.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
+jest.mock('../../../lib/prisma', () => ({
+  __esModule: true,
+  default: {
+    category: { findMany: jest.fn().mockResolvedValue([]) },
+    item: { findMany: jest.fn().mockResolvedValue([]) }
+  }
+}), { virtual: true });
+
 global.fetch = jest.fn(() =>
   Promise.resolve({ ok: true, json: () => Promise.resolve([]) })
 ) as jest.Mock;
