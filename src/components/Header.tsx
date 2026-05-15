@@ -56,7 +56,7 @@ export default function Header() {
         <div className="flex items-center gap-4">
           <div className="md:hidden">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex h-10 w-10 items-center justify-center text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-full focus:outline-none">
+              <DropdownMenuTrigger aria-label="Відкрити меню" className="flex h-10 w-10 items-center justify-center text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-full focus:outline-none">
                 <Menu className="h-6 w-6" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48 rounded-2xl border-slate-100 shadow-xl p-2 mt-2">
@@ -73,7 +73,7 @@ export default function Header() {
             </DropdownMenu>
           </div>
 
-          <Link href="/" className="flex items-center gap-2.5 group">
+          <Link href="/" aria-label="Головна сторінка" className="flex items-center gap-2.5 group">
             <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.3 }} className="bg-blue-600 rounded-xl p-2 text-white shadow-md shadow-blue-600/20">
               <Compass className="h-5 w-5" />
             </motion.div>
@@ -102,7 +102,7 @@ export default function Header() {
               </Link>
 
               <DropdownMenu onOpenChange={(open) => open && handleMarkAsRead()}>
-                <DropdownMenuTrigger className="relative flex h-10 w-10 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100 transition-colors focus:outline-none">
+                <DropdownMenuTrigger aria-label="Сповіщення" className="relative flex h-10 w-10 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100 transition-colors focus:outline-none">
                   <Bell className="h-5 w-5" />
                   {unreadCount > 0 && (
                     <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>

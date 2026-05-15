@@ -29,7 +29,7 @@ export default function HomePage() {
           <h2 className="text-2xl font-bold text-slate-800 mb-8 text-center md:text-left">Що у вас сталося?</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Link href="/found" className="group flex flex-col items-center md:items-start bg-blue-50/70 hover:bg-blue-100 p-8 rounded-2xl border border-blue-100/50 transition-all hover:shadow-md hover:-translate-y-1">
+            <Link href="/found" aria-label="Перейти до розділу знайдених речей" className="group flex flex-col items-center md:items-start bg-blue-50/70 hover:bg-blue-100 p-8 rounded-2xl border border-blue-100/50 transition-all hover:shadow-md hover:-translate-y-1">
               <div className="w-14 h-14 bg-white rounded-2xl shadow-sm border border-blue-50 flex items-center justify-center mb-6 text-blue-600 group-hover:scale-110 transition-transform">
                 <AlertCircle className="w-7 h-7" />
               </div>
@@ -42,7 +42,7 @@ export default function HomePage() {
               </div>
             </Link>
 
-            <Link href="/lost" className="group flex flex-col items-center md:items-start bg-emerald-50/70 hover:bg-emerald-100 p-8 rounded-2xl border border-emerald-100/50 transition-all hover:shadow-md hover:-translate-y-1">
+            <Link href="/lost" aria-label="Перейти до розділу загублених речей" className="group flex flex-col items-center md:items-start bg-emerald-50/70 hover:bg-emerald-100 p-8 rounded-2xl border border-emerald-100/50 transition-all hover:shadow-md hover:-translate-y-1">
               <div className="w-14 h-14 bg-white rounded-2xl shadow-sm border border-emerald-50 flex items-center justify-center mb-6 text-emerald-600 group-hover:scale-110 transition-transform">
                 <Eye className="w-7 h-7" />
               </div>
@@ -50,7 +50,7 @@ export default function HomePage() {
               <p className="text-slate-600 text-center md:text-left text-sm mb-6 leading-relaxed flex-grow">
                 Знайшли чужу річ на вулиці? Перегляньте оголошення про втрати — справжній власник, ймовірно, вже б'є на сполох.
               </p>
-              <div className="mt-auto flex items-center text-emerald-600 font-bold text-sm">
+              <div className="mt-auto flex items-center text-emerald-700 font-bold text-sm">
                 Переглянути загублені речі <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform" />
               </div>
             </Link>
